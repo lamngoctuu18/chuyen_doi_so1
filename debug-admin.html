@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Admin Reports - Manual Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 20px; border-radius: 8px; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; }
+        .success { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .info { background: #d1ecf1; color: #0c5460; border: 1px solid #bee5eb; }
+        button { padding: 8px 16px; margin: 5px; border: none; border-radius: 4px; cursor: pointer; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        pre { background: #f8f9fa; padding: 10px; border-radius: 4px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Debug Admin Reports - Manual Test</h1>
+        
+        <div class="status info">
+            <strong>URLs to test:</strong><br>
+            • Frontend: <a href="http://localhost:5174/" target="_blank">http://localhost:5174/</a><br>
+            • Simple Admin: <a href="http://localhost:5174/admin/reports" target="_blank">http://localhost:5174/admin/reports</a><br>
+            • Test Admin: <a href="http://localhost:5174/test-admin-reports" target="_blank">http://localhost:5174/test-admin-reports</a><br>
+            • Backend API: <a href="http://localhost:3001/health" target="_blank">http://localhost:3001/health</a>
+        </div>
+
+        <div id="status" class="status info">Ready to test...</div>
+
+        <h2>Quick Tests</h2>
+        <button class="btn-primary" onclick="testBackend()">Test Backend Health</button>
+        <button class="btn-primary" onclick="testAPI()">Test API with Token</button>
+        <button class="btn-success" onclick="setAdminToken()">Set Admin Token</button>
+        <button class="btn-success" onclick="checkLocalStorage()">Check LocalStorage</button>
+
+        <h2>Test Results</h2>
+        <div id="results"></div>
+
+        <h2>Instructions</h2>
+        <ol>
+            <li>Click "Set Admin Token" to mock an admin login</li>
+            <li>Click "Test API with Token" to verify backend communication</li>
+            <li>Visit the frontend URLs above</li>
+            <li>Open browser DevTools (F12) to check for JavaScript errors</li>
+            <li>Check the Network tab for failed requests</li>
+        </ol>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.innerHTML = `<strong>${new Date().toLocaleTimeString()}:</strong> ${message}`;
+            document.getElementById('results').appendChild(div);
+        }
+
+        function setAdminToken() {
+            const adminUser = {
+                id: '1',
+                email: 'admin@dainam.edu.vn',
+                name: 'Admin User',
+                role: 'admin',
+                phone: '0123456789'
+            };
+            const token = 'mock-admin-token-12345';
+            
+            localStorage.setItem('user', JSON.stringify(adminUser));
+            localStorage.setItem('token', token);
+            
+            log('✅ Admin user and token set in localStorage', 'success');
+            checkLocalStorage();
+        }
+
+        function checkLocalStorage() {
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            log(`User: ${user ? 'EXISTS' : 'MISSING'}`, user ? 'success' : 'error');
+            log(`Token: ${token ? 'EXISTS' : 'MISSING'}`, token ? 'success' : 'error');
+            
+            if (user) {
+                try {
+                    const userObj = JSON.parse(user);
+                    log(`User role: ${userObj.role}`, 'info');
+                } catch (e) {
+                    log('Error parsing user data', 'error');
+                }
+            }
+        }
+
+        async function testBackend() {
+            try {
+                const response = await fetch('http://localhost:3001/health');
+                const data = await response.json();
+                log(`✅ Backend Health: ${JSON.stringify(data)}`, 'success');
+            } catch (error) {
+                log(`❌ Backend Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAPI() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    log('❌ No token found. Click "Set Admin Token" first.', 'error');
+                    return;
+                }
+
+                const response = await fetch('http://localhost:3001/api/teacher-reports/supervision-overview', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                log(`API Response Status: ${response.status}`, response.ok ? 'success' : 'error');
+                
+                const data = await response.json();
+                log(`API Response: ${JSON.stringify(data, null, 2)}`, response.ok ? 'success' : 'error');
+                
+                if (data.success && data.data) {
+                    log(`Found ${data.data.length} teachers`, 'success');
+                }
+            } catch (error) {
+                log(`❌ API Error: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-check localStorage on page load
+        checkLocalStorage();
+    </script>
+</body>
+</html>
