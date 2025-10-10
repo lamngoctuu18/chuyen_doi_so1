@@ -1,7 +1,44 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const SinhVien = require('../models/SinhVien');
 const { authenticateToken } = require('../middleware/auth');
+
+// Configure multer for CV uploads
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    const uploadDir = path.join(__dirname, '../../uploads/cv');
+    // Create directory if it doesn't exist
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    // Create unique filename: studentId_timestamp.pdf
+    const studentId = req.user?.userId || 'unknown';
+    const timestamp = Date.now();
+    const extension = path.extname(file.originalname);
+    cb(null, `${studentId}_${timestamp}${extension}`);
+  }
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: function (req, file, cb) {
+    // Only allow PDF files
+    if (file.mimetype === 'application/pdf') {
+      cb(null, true);
+    } else {
+      cb(new Error('Chỉ chấp nhận file PDF'), false);
+    }
+  }
+});
 
 // GET /api/sinh-vien - Lấy danh sách sinh viên với phân trang
 router.get('/', authenticateToken, async (req, res) => {
@@ -75,7 +112,7 @@ router.get('/stats', authenticateToken, async (req, res) => {
 // IMPORTANT: Place specific routes BEFORE dynamic parameter routes to avoid conflicts
 
 // POST /api/sinh-vien/register-internship - Student registers for internship
-router.post('/register-internship', authenticateToken, async (req, res) => {
+router.post('/register-internship', authenticateToken, upload.single('cv_file'), async (req, res) => {
   try {
     const userId = req.user?.userId;
     const {
@@ -96,6 +133,14 @@ router.post('/register-internship', authenticateToken, async (req, res) => {
       });
     }
 
+    // Validate CV file
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'Vui lòng upload file CV (định dạng PDF)'
+      });
+    }
+
     // If student chooses 'tu_lien_he', validate company info
     if (nguyen_vong_thuc_tap === 'tu_lien_he') {
       if (!cong_ty_tu_lien_he || !dia_chi_cong_ty || !nguoi_lien_he_cong_ty || !sdt_nguoi_lien_he) {
@@ -107,6 +152,8 @@ router.post('/register-internship', authenticateToken, async (req, res) => {
     }
 
     // Update student record
+    const cvPath = req.file ? `/uploads/cv/${req.file.filename}` : null;
+    
     const result = await SinhVien.updateInternshipRegistration(userId, {
       nguyen_vong_thuc_tap,
       vi_tri_muon_ung_tuyen_thuc_tap,
@@ -114,7 +161,8 @@ router.post('/register-internship', authenticateToken, async (req, res) => {
       cong_ty_tu_lien_he: nguyen_vong_thuc_tap === 'tu_lien_he' ? cong_ty_tu_lien_he : null,
       dia_chi_cong_ty: nguyen_vong_thuc_tap === 'tu_lien_he' ? dia_chi_cong_ty : null,
       nguoi_lien_he_cong_ty: nguyen_vong_thuc_tap === 'tu_lien_he' ? nguoi_lien_he_cong_ty : null,
-      sdt_nguoi_lien_he: nguyen_vong_thuc_tap === 'tu_lien_he' ? sdt_nguoi_lien_he : null
+      sdt_nguoi_lien_he: nguyen_vong_thuc_tap === 'tu_lien_he' ? sdt_nguoi_lien_he : null,
+      cv_path: cvPath
     });
 
     // If result contains updated student data, return it

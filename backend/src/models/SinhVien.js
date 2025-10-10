@@ -24,6 +24,7 @@ class SinhVien {
         this.dia_chi_cong_ty = data.dia_chi_cong_ty;
         this.nguoi_lien_he_cong_ty = data.nguoi_lien_he_cong_ty;
         this.sdt_nguoi_lien_he = data.sdt_nguoi_lien_he;
+        this.cv_path = data.cv_path;
         this.trang_thai_phan_cong = data.trang_thai_phan_cong;
         this.created_at = data.created_at;
         this.updated_at = data.updated_at;
@@ -55,7 +56,7 @@ class SinhVien {
         try {
             const fields = [];
             const values = [];
-            const allowed = ['nguyen_vong_thuc_tap', 'vi_tri_muon_ung_tuyen_thuc_tap', 'don_vi_thuc_tap', 'cong_ty_tu_lien_he', 'dia_chi_cong_ty', 'nguoi_lien_he_cong_ty', 'sdt_nguoi_lien_he', 'gpa'];
+            const allowed = ['nguyen_vong_thuc_tap', 'vi_tri_muon_ung_tuyen_thuc_tap', 'don_vi_thuc_tap', 'cong_ty_tu_lien_he', 'dia_chi_cong_ty', 'nguoi_lien_he_cong_ty', 'sdt_nguoi_lien_he', 'gpa', 'cv_path'];
             
             for (const k of allowed) {
                 if (registrationData[k] !== undefined) {
@@ -76,7 +77,15 @@ class SinhVien {
                 return { success: false, message: 'Không tìm thấy sinh viên' };
             }
 
-            const markSql = `UPDATE sinh_vien sv JOIN accounts a ON sv.account_id = a.id SET sv.trang_thai_phan_cong = 'da-phan-cong' WHERE a.user_id = ? AND sv.vi_tri_muon_ung_tuyen_thuc_tap IS NOT NULL AND sv.vi_tri_muon_ung_tuyen_thuc_tap <> '' AND sv.don_vi_thuc_tap IS NOT NULL AND sv.don_vi_thuc_tap <> ''`;
+                        const markSql = `UPDATE sinh_vien sv 
+                                JOIN accounts a ON sv.account_id = a.id 
+                                SET sv.trang_thai_phan_cong = 'da-phan-cong' 
+                                WHERE a.user_id = ? 
+                                    AND sv.vi_tri_muon_ung_tuyen_thuc_tap IS NOT NULL AND sv.vi_tri_muon_ung_tuyen_thuc_tap <> '' 
+                                    AND sv.don_vi_thuc_tap IS NOT NULL AND sv.don_vi_thuc_tap <> ''
+                                    AND sv.giang_vien_huong_dan IS NOT NULL AND sv.giang_vien_huong_dan <> ''
+                                    AND sv.nguyen_vong_thuc_tap IS NOT NULL AND sv.nguyen_vong_thuc_tap <> ''
+                                    AND sv.cv_path IS NOT NULL AND sv.cv_path <> ''`;
             
             await query(markSql, [userId]);
             
@@ -101,11 +110,13 @@ class SinhVien {
                          AND giang_vien_huong_dan <> ''
                          AND nguyen_vong_thuc_tap IS NOT NULL 
                          AND nguyen_vong_thuc_tap <> ''
+                         AND cv_path IS NOT NULL
+                         AND cv_path <> ''
                     THEN 'da-phan-cong' 
                     ELSE 'chua-phan-cong' 
                 END`;
             await query(sql);
-            console.log('✅ Đã cập nhật trạng thái phân công cho tất cả sinh viên (cần đủ 4 thông tin: vị trí + doanh nghiệp + giảng viên + nguyện vọng)');
+            console.log('✅ Đã cập nhật trạng thái phân công cho tất cả sinh viên (cần đủ 5 thông tin: vị trí + doanh nghiệp + giảng viên + nguyện vọng + CV)');
         } catch (error) {
             console.error('Error in recalcAssignmentStatus:', error);
         }

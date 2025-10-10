@@ -58,6 +58,7 @@ class CompaniesController {
           svhd.so_dien_thoai_sinh_vien AS so_dien_thoai,
           svhd.email_sinh_vien AS email,
           svhd.lop_sinh_vien AS lop,
+          sv.cv_path AS cv_path,
           NULL AS vi_tri_mong_muon,
           NULL AS ghi_chu_thuc_tap,
           NULL AS nhom_thuc_tap,

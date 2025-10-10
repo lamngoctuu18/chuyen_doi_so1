@@ -115,6 +115,7 @@ app.use('/api/teacher-reports', require('./src/routes/teacherReports'));
 app.use('/api/teacher-profile', require('./src/routes/teacherProfile'));
 app.use('/api/teacher-submissions', require('./src/routes/teacherSubmissions'));
 app.use('/api/teacher-company-evaluations', require('./src/routes/teacher-company-evaluations'));
+app.use('/api/internship-reports', require('./src/routes/internship-reports'));
 app.use('/api/import', importRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/password', require('./src/routes/password'));
