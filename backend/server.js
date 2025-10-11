@@ -30,23 +30,44 @@ app.use(helmet({
 // Disable ETag to prevent 304 on dynamic API responses
 app.set('etag', false);
 
-// CORS configuration (allow common dev ports 5173/5174)
+// CORS configuration
+// - Cho phép origin của frontend (FRONTEND_URL hoặc FRONTEND_URLS dạng CSV)
+// - Cho phép same-origin với backend (http://localhost:PORT) để Swagger UI hoạt động
+// - Trong môi trường dev, nới lỏng cho mọi localhost:* nếu cần
+const DEV_PORT = process.env.PORT || 3001;
+const defaultFrontend = process.env.FRONTEND_URL || 'http://localhost:5173';
+const extraFrontends = (process.env.FRONTEND_URLS || '')
+  .split(',')
+  .map(s => s.trim())
+  .filter(Boolean);
+
 const allowedOrigins = new Set([
-  process.env.FRONTEND_URL || 'http://localhost:5173',
+  defaultFrontend,
   'http://localhost:5173',
   'http://127.0.0.1:5173',
   'http://localhost:5174',
-  'http://127.0.0.1:5174'
+  'http://127.0.0.1:5174',
+  // same-origin (backend) to support Swagger UI calls
+  `http://localhost:${DEV_PORT}`,
+  `http://127.0.0.1:${DEV_PORT}`,
+  ...extraFrontends,
 ]);
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin) return callback(null, true); // allow non-browser or same-origin
+    // allow non-browser requests or same-origin without Origin header
+    if (!origin) return callback(null, true);
+
+    // Allow explicitly whitelisted origins
     if (allowedOrigins.has(origin)) return callback(null, true);
-    // In dev, relax CORS slightly if origin is localhost on :517x
-    if (/^http:\/\/localhost:517\d$/.test(origin) || /^http:\/\/127\.0\.0\.1:517\d$/.test(origin)) {
-      return callback(null, true);
+
+    // In development, allow any localhost origin (useful for local testing)
+    if (process.env.NODE_ENV !== 'production') {
+      if (/^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(origin)) {
+        return callback(null, true);
+      }
     }
+
     return callback(new Error('Not allowed by CORS: ' + origin));
   },
   credentials: true,

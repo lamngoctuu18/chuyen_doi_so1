@@ -30,6 +30,50 @@ class SinhVien {
         this.updated_at = data.updated_at;
     }
 
+    // Tạo profile sinh viên mới (tránh trùng lặp theo ma_sinh_vien)
+    static async create(data) {
+        const mapping = {
+            accountId: 'account_id',
+            maSinhVien: 'ma_sinh_vien',
+            hoTen: 'ho_ten',
+            emailCaNhan: 'email_ca_nhan',
+            soDienThoai: 'so_dien_thoai',
+            lop: 'lop',
+            khoa: 'khoa',
+            nganh: 'nganh',
+            khoaHoc: 'khoa_hoc',
+            ngaySinh: 'ngay_sinh',
+            gioiTinh: 'gioi_tinh',
+            diaChi: 'dia_chi',
+            gpa: 'gpa',
+            tinhTrangHocTap: 'tinh_trang_hoc_tap',
+            viTriMuonUngTuyenThucTap: 'vi_tri_muon_ung_tuyen_thuc_tap',
+            viTriMuonUngTuyen: 'vi_tri_muon_ung_tuyen_thuc_tap',
+            donViThucTap: 'don_vi_thuc_tap',
+            nguyenVongThucTap: 'nguyen_vong_thuc_tap',
+            giangVienHuongDan: 'giang_vien_huong_dan',
+        };
+
+        // Build columns and values
+        const cols = [];
+        const placeholders = [];
+        const values = [];
+        for (const [src, dest] of Object.entries(mapping)) {
+            if (data[src] !== undefined && data[src] !== null) {
+                cols.push(dest);
+                placeholders.push('?');
+                values.push(data[src]);
+            }
+        }
+        if (!cols.includes('ma_sinh_vien')) {
+            throw new Error('Thiếu ma_sinh_vien khi tạo sinh viên');
+        }
+
+        const sql = `INSERT INTO sinh_vien (${cols.join(',')}) VALUES (${placeholders.join(',')})`;
+        const result = await query(sql, values);
+        return { success: true, insertId: result.insertId };
+    }
+
     // Tìm theo mã sinh viên
     static async findByMaSinhVien(maSinhVien) {
         try {
@@ -194,6 +238,21 @@ class SinhVien {
         values.push(data.maSinhVien || maSinhVien);
         const result = await query(sql, values);
         return { success: true, affectedRows: result.affectedRows };
+    }
+
+    // Xóa trùng lặp theo ma_sinh_vien (giữ lại id nhỏ nhất)
+    static async deduplicateByMaSinhVien() {
+        try {
+            const sql = `
+                DELETE sv1 FROM sinh_vien sv1
+                INNER JOIN sinh_vien sv2
+                  ON sv1.ma_sinh_vien = sv2.ma_sinh_vien AND sv1.id > sv2.id`;
+            const res = await query(sql);
+            return { success: true, affectedRows: res.affectedRows || 0 };
+        } catch (error) {
+            console.error('Error in deduplicateByMaSinhVien:', error);
+            return { success: false, message: error.message };
+        }
     }
 
     // Chỉ điền vào các cột đang trống (NULL hoặc '')

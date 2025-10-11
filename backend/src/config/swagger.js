@@ -17,7 +17,14 @@ const options = {
         - **Import/Export**: Excel templates, bulk operations
         
         ## 🔐 Authentication:
-        Sử dụng JWT Token trong header: \`Authorization: Bearer <token>\`
+        1) Đăng nhập để lấy token tại một trong các endpoint:
+           - POST /api/auth/login (body: { userCode, password })
+           - POST /api/auth/login/admin (body: { userId, password })
+           - POST /api/auth/login/sinh-vien (body: { maSinhVien, password })
+        2) Click nút "Authorize" (góc phải trên) và dán token (không cần gõ chữ "Bearer ")
+        3) Swagger sẽ tự gửi header \`Authorization: Bearer <token>\` cho các API yêu cầu xác thực
+        
+        Lưu ý: Token có hạn dùng (~24h). Nếu token cũ, vui lòng đăng nhập lại.
         
         ## 📱 Liên hệ:
         - **Email**: admin@dainam.edu.vn
@@ -42,6 +49,9 @@ const options = {
         url: 'https://api.dainam.edu.vn',
         description: 'Production Server'
       }
+    ],
+    security: [
+      { bearerAuth: [] }
     ],
     components: {
       securitySchemes: {

@@ -23,4 +23,44 @@ router.get('/stats-public',
   DashboardController.getStats
 );
 
+/**
+ * @route   GET /api/dashboard/overview
+ * @desc    Lấy thống kê tổng quan cho admin
+ * @access  Private (Admin)
+ */
+router.get('/overview', 
+  authenticateToken,
+  requireAdmin,
+  DashboardController.getOverview
+);
+
+/**
+ * @route   GET /api/dashboard/overview-public
+ * @desc    Lấy thống kê tổng quan (public cho testing)
+ * @access  Public
+ */
+router.get('/overview-public', 
+  DashboardController.getOverview
+);
+
+/**
+ * @route   GET /api/dashboard/summary
+ * @desc    Lấy tóm tắt hệ thống
+ * @access  Private (Admin)
+ */
+router.get('/summary', 
+  authenticateToken,
+  requireAdmin,
+  DashboardController.getSummary
+);
+
+/**
+ * @route   GET /api/dashboard/summary-public
+ * @desc    Lấy tóm tắt hệ thống (public cho testing)
+ * @access  Public
+ */
+router.get('/summary-public', 
+  DashboardController.getSummary
+);
+
 module.exports = router;

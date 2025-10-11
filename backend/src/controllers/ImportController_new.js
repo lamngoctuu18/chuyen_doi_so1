@@ -73,10 +73,21 @@ class ImportController {
       // Recalculate assignment status after import
       try {
         const SinhVien = require('../models/SinhVien');
+        // Dọn trùng lặp trước khi cập nhật trạng thái
+        await SinhVien.deduplicateByMaSinhVien();
         await SinhVien.recalcAssignmentStatus();
         console.log('✅ Đã cập nhật trạng thái phân công sau import sinh viên');
       } catch (e) {
         console.warn('⚠️ Không thể cập nhật trạng thái phân công:', e.message);
+      }
+
+      // Auto-assign lecturers by quota for students without lecturer after import
+      try {
+        const { autoAssignLecturersByQuota } = require('../services/AutoAssignService');
+        const summary = await autoAssignLecturersByQuota();
+        console.log('✅ Auto-assign lecturers after student import:', summary);
+      } catch (e) {
+        console.warn('⚠️ Không thể tự động phân công giảng viên sau khi import sinh viên:', e.message);
       }
       
       // After import, persist participation counts (derived from sinh_vien columns) into the latest active batch
@@ -178,10 +189,20 @@ class ImportController {
       // Recalculate assignment status after profile import
       try {
         const SinhVien = require('../models/SinhVien');
+        await SinhVien.deduplicateByMaSinhVien();
         await SinhVien.recalcAssignmentStatus();
         console.log('✅ Đã cập nhật trạng thái phân công sau import profile');
       } catch (e) {
         console.warn('⚠️ Không thể cập nhật trạng thái phân công:', e.message);
+      }
+
+      // Auto-assign lecturers by quota for students without lecturer after profile import
+      try {
+        const { autoAssignLecturersByQuota } = require('../services/AutoAssignService');
+        const summary = await autoAssignLecturersByQuota();
+        console.log('✅ Auto-assign lecturers after student profile import:', summary);
+      } catch (e) {
+        console.warn('⚠️ Không thể tự động phân công giảng viên sau khi import profile sinh viên:', e.message);
       }
 
       // After import, persist participation counts
@@ -408,11 +429,22 @@ class ImportController {
       
       const hasErrors = finalResult.summary.totalErrors > 0;
       
+      // Sau khi import giảng viên, dọn trùng sinh viên rồi chạy auto-assign cho SV chưa có GV
+      try {
+        const SinhVien = require('../models/SinhVien');
+        await SinhVien.deduplicateByMaSinhVien();
+        const { autoAssignLecturersByQuota } = require('../services/AutoAssignService');
+        const summary = await autoAssignLecturersByQuota();
+        console.log('✅ Auto-assign lecturers after teacher import:', summary);
+      } catch (e) {
+        console.warn('⚠️ Không thể tự động phân công sau khi import giảng viên:', e.message);
+      }
+
       res.status(hasErrors ? 206 : 200).json({
         success: true,
         message: hasErrors ? 
           `Import hoàn thành với ${finalResult.summary.totalErrors} lỗi` : 
-          'Import giảng viên thành công',
+          'Import giảng viên thành công và đã phân công ngẫu nhiên cho sinh viên chưa có giảng viên (theo chỉ tiêu)',
         data: finalResult
       });
       

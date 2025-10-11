@@ -544,7 +544,9 @@ class ExcelImportService {
   static async createOrUpdateProfile(accountType, accountId, data, results, options = {}) {
     switch (accountType) {
       case 'sinh-vien':
-        const existingSV = await SinhVien.findByAccountId(accountId);
+        // Ưu tiên tìm theo mã SV để tránh tạo trùng, vì có thể account_id mới
+        const existingByCode = await SinhVien.findByMaSinhVien(data.maSinhVien);
+        const existingSV = existingByCode || (await SinhVien.findByAccountId(accountId));
         if (existingSV) {
           if (options.fillEmptyOnly) {
             await SinhVien.fillEmptyColumnsByMaSinhVien(data.maSinhVien, data);

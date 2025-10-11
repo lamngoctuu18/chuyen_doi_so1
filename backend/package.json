@@ -11,7 +11,9 @@
     "seed": "node src/database/seed.js",
     "reset": "npm run migrate && npm run seed",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "reset-db": "node reset.js"
+    "reset-db": "node reset.js",
+    "dedupe:students": "node scripts/dedupe_students.js",
+    "db:add-unique-indexes": "node scripts/add_unique_indexes.js"
   },
   "keywords": [],
   "author": "",
