@@ -140,6 +140,8 @@ app.use('/api/internship-reports', require('./src/routes/internship-reports'));
 app.use('/api/import', importRoutes);
 app.use('/api/accounts', accountRoutes);
 app.use('/api/password', require('./src/routes/password'));
+app.use('/api/student-reports', require('./src/routes/studentReports'));
+app.use('/api/password-reset', require('./src/routes/passwordReset'));
 app.use('/api/profile', require('./src/routes/profile'));
 app.use('/api/company-registrations', require('./src/routes/company-registrations'));
 app.use('/api/student-registrations', require('./src/routes/student-registrations'));

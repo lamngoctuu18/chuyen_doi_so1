@@ -3,7 +3,7 @@ const db = require('../database/connection');
 class RegistrationPeriod {
   static async createTable() {
     const query = `
-      CREATE TABLE IF NOT EXISTS registration_periods (
+      CREATE TABLE IF NOT EXISTS thoi_gian_dang_ky_dot_thuc_tap (
         id INT PRIMARY KEY AUTO_INCREMENT,
         title VARCHAR(255) NOT NULL COMMENT 'Tiêu đề đợt đăng ký',
         start_time DATETIME NOT NULL COMMENT 'Thời gian bắt đầu đăng ký',
@@ -17,9 +17,9 @@ class RegistrationPeriod {
     
     try {
       await db.query(query);
-      console.log('Table registration_periods created successfully');
+      console.log('Table thoi_gian_dang_ky_dot_thuc_tap created successfully');
     } catch (error) {
-      console.error('Error creating registration_periods table:', error);
+      console.error('Error creating thoi_gian_dang_ky_dot_thuc_tap table:', error);
       throw error;
     }
   }
@@ -30,11 +30,11 @@ class RegistrationPeriod {
     
     try {
       // Deactivate all existing periods
-      await db.query('UPDATE registration_periods SET is_active = 0');
+      await db.query('UPDATE thoi_gian_dang_ky_dot_thuc_tap SET is_active = 0');
       
       // Create new active period
       const query = `
-        INSERT INTO registration_periods (title, start_time, end_time, description, is_active)
+        INSERT INTO thoi_gian_dang_ky_dot_thuc_tap (title, start_time, end_time, description, is_active)
         VALUES (?, ?, ?, ?, 1)
       `;
       
@@ -50,7 +50,7 @@ class RegistrationPeriod {
   static async getCurrentPeriod() {
     try {
       const query = `
-        SELECT * FROM registration_periods 
+        SELECT * FROM thoi_gian_dang_ky_dot_thuc_tap 
         WHERE is_active = 1 
         ORDER BY created_at DESC 
         LIMIT 1
@@ -68,7 +68,7 @@ class RegistrationPeriod {
   static async isRegistrationOpen() {
     try {
       const query = `
-        SELECT * FROM registration_periods 
+        SELECT * FROM thoi_gian_dang_ky_dot_thuc_tap 
         WHERE is_active = 1 
           AND NOW() >= start_time 
           AND NOW() <= end_time
@@ -132,7 +132,7 @@ class RegistrationPeriod {
   static async getHistory() {
     try {
       const query = `
-        SELECT * FROM registration_periods 
+        SELECT * FROM thoi_gian_dang_ky_dot_thuc_tap 
         ORDER BY created_at DESC
       `;
       
@@ -147,7 +147,7 @@ class RegistrationPeriod {
   // Xóa đợt đăng ký
   static async deletePeriod(id) {
     try {
-      const query = 'DELETE FROM registration_periods WHERE id = ?';
+      const query = 'DELETE FROM thoi_gian_dang_ky_dot_thuc_tap WHERE id = ?';
       const result = await db.query(query, [id]);
       return result.affectedRows > 0;
     } catch (error) {
@@ -161,10 +161,10 @@ class RegistrationPeriod {
     try {
       if (isActive) {
         // Deactivate all others first
-        await db.query('UPDATE registration_periods SET is_active = 0');
+        await db.query('UPDATE thoi_gian_dang_ky_dot_thuc_tap SET is_active = 0');
       }
       
-      const query = 'UPDATE registration_periods SET is_active = ? WHERE id = ?';
+      const query = 'UPDATE thoi_gian_dang_ky_dot_thuc_tap SET is_active = ? WHERE id = ?';
       const result = await db.query(query, [isActive ? 1 : 0, id]);
       return result.affectedRows > 0;
     } catch (error) {

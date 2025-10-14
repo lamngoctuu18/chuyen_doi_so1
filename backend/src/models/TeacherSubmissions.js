@@ -11,7 +11,7 @@ class TeacherSubmissions {
   static async ensureTables() {
     // Create tables if not exist
     await connection.query(`
-      CREATE TABLE IF NOT EXISTS submission_slots (
+      CREATE TABLE IF NOT EXISTS dot_nop_bao_cao_theo_tuan (
         id INT AUTO_INCREMENT PRIMARY KEY,
         ma_giang_vien VARCHAR(20) NOT NULL,
         tieu_de VARCHAR(255) NOT NULL,
@@ -25,7 +25,7 @@ class TeacherSubmissions {
     `);
 
     await connection.query(`
-      CREATE TABLE IF NOT EXISTS student_submissions (
+      CREATE TABLE IF NOT EXISTS bai_nop_cua_sinh_vien (
         id INT AUTO_INCREMENT PRIMARY KEY,
         slot_id INT NOT NULL,
         ma_sinh_vien VARCHAR(20) NOT NULL,
@@ -36,7 +36,7 @@ class TeacherSubmissions {
         submitted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         teacher_comment TEXT,
         trang_thai ENUM('da_nop','da_duyet','tu_choi') DEFAULT 'da_nop',
-        FOREIGN KEY (slot_id) REFERENCES submission_slots(id) ON DELETE CASCADE,
+        FOREIGN KEY (slot_id) REFERENCES dot_nop_bao_cao_theo_tuan(id) ON DELETE CASCADE,
         INDEX idx_slot (slot_id),
         INDEX idx_sv (ma_sinh_vien)
       ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -46,7 +46,7 @@ class TeacherSubmissions {
   static async updateSlotTimes(maGiangVien, slotId, { start_at, end_at }) {
     // basic validation here; controller also validates
     const result = await connection.query(
-      `UPDATE submission_slots
+      `UPDATE dot_nop_bao_cao_theo_tuan
        SET start_at = ?, end_at = ?
        WHERE id = ? AND ma_giang_vien = ?`,
       [start_at, end_at, slotId, maGiangVien]
@@ -58,7 +58,7 @@ class TeacherSubmissions {
   static async createSlot(maGiangVien, payload) {
     const { tieu_de, loai_bao_cao = 'tuan', mo_ta = null, start_at, end_at } = payload;
     const result = await connection.query(
-      `INSERT INTO submission_slots (ma_giang_vien, tieu_de, loai_bao_cao, mo_ta, start_at, end_at)
+      `INSERT INTO dot_nop_bao_cao_theo_tuan (ma_giang_vien, tieu_de, loai_bao_cao, mo_ta, start_at, end_at)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [maGiangVien, tieu_de, loai_bao_cao, mo_ta, start_at, end_at]
     );
@@ -68,7 +68,7 @@ class TeacherSubmissions {
   static async listSlotsByTeacher(maGiangVien) {
     return connection.query(
       `SELECT id, tieu_de, loai_bao_cao, mo_ta, start_at, end_at, created_at
-       FROM submission_slots WHERE ma_giang_vien = ? ORDER BY id DESC`,
+       FROM dot_nop_bao_cao_theo_tuan WHERE ma_giang_vien = ? ORDER BY id DESC`,
       [maGiangVien]
     );
   }
@@ -76,7 +76,7 @@ class TeacherSubmissions {
   static async getSlotWithStatuses(slotId, maGiangVien) {
     // Verify slot belongs to teacher
     const [slot] = await connection.query(
-      `SELECT * FROM submission_slots WHERE id = ? AND ma_giang_vien = ?`,
+      `SELECT * FROM dot_nop_bao_cao_theo_tuan WHERE id = ? AND ma_giang_vien = ?`,
       [slotId, maGiangVien]
     );
     if (!slot) throw new Error('Không tìm thấy đợt nộp');
@@ -96,7 +96,7 @@ class TeacherSubmissions {
 
     // Get submissions for this slot (all files)
     const submissions = await connection.query(
-      `SELECT * FROM student_submissions WHERE slot_id = ? ORDER BY submitted_at DESC, id DESC`,
+      `SELECT * FROM bai_nop_cua_sinh_vien WHERE slot_id = ? ORDER BY submitted_at DESC, id DESC`,
       [slotId]
     );
 
@@ -160,14 +160,14 @@ class TeacherSubmissions {
   static async addTeacherComment(submissionId, maGiangVien, comment, trang_thai) {
     // Ensure submission belongs to a slot of this teacher
     const [row] = await connection.query(
-      `SELECT ss.id FROM student_submissions ss
-       INNER JOIN submission_slots sl ON sl.id = ss.slot_id
+      `SELECT ss.id FROM bai_nop_cua_sinh_vien ss
+       INNER JOIN dot_nop_bao_cao_theo_tuan sl ON sl.id = ss.slot_id
        WHERE ss.id = ? AND sl.ma_giang_vien = ?`,
       [submissionId, maGiangVien]
     );
     if (!row) throw new Error('Không tìm thấy bài nộp');
     await connection.query(
-      `UPDATE student_submissions SET teacher_comment = ?, trang_thai = COALESCE(?, trang_thai) WHERE id = ?`,
+      `UPDATE bai_nop_cua_sinh_vien SET teacher_comment = ?, trang_thai = COALESCE(?, trang_thai) WHERE id = ?`,
       [comment, trang_thai || null, submissionId]
     );
     return { success: true };
@@ -183,7 +183,7 @@ class TeacherSubmissions {
     if (!sv) return [];
     return connection.query(
       `SELECT id, tieu_de, loai_bao_cao, mo_ta, start_at, end_at
-       FROM submission_slots 
+       FROM dot_nop_bao_cao_theo_tuan 
        WHERE ma_giang_vien = ? AND start_at <= NOW() AND end_at >= NOW()
        ORDER BY id DESC`,
       [sv.ma_giang_vien]
@@ -193,7 +193,7 @@ class TeacherSubmissions {
   static async saveStudentSubmission(slotId, maSinhVien, fileInfo) {
     const { file_path, original_name, mime_type, file_size } = fileInfo;
     const result = await connection.query(
-      `INSERT INTO student_submissions (slot_id, ma_sinh_vien, file_path, original_name, mime_type, file_size)
+      `INSERT INTO bai_nop_cua_sinh_vien (slot_id, ma_sinh_vien, file_path, original_name, mime_type, file_size)
        VALUES (?, ?, ?, ?, ?, ?)`,
       [slotId, maSinhVien, file_path, original_name, mime_type, file_size]
     );
@@ -205,7 +205,7 @@ class TeacherSubmissions {
       `SELECT id, original_name, mime_type, file_size, submitted_at,
               teacher_comment, trang_thai,
               CONCAT('/uploads/submissions/', ?, '/', SUBSTRING_INDEX(file_path, '/', -1)) AS file_url
-       FROM student_submissions
+       FROM bai_nop_cua_sinh_vien
        WHERE slot_id = ? AND ma_sinh_vien = ?
        ORDER BY submitted_at DESC, id DESC`,
       [String(slotId), slotId, maSinhVien]
@@ -225,7 +225,7 @@ class TeacherSubmissions {
           WHEN NOW() > end_at THEN 'da_dong'
           ELSE 'dang_mo'
         END AS trang_thai
-       FROM submission_slots 
+       FROM dot_nop_bao_cao_theo_tuan 
        WHERE ma_giang_vien = ?
        ORDER BY start_at DESC, id DESC`,
       [sv.ma_giang_vien]

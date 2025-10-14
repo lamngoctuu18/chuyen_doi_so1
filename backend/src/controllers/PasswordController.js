@@ -277,7 +277,7 @@ class PasswordController {
 
       // Lưu mã xác minh vào database
       await connection.query(`
-        INSERT INTO password_reset_codes (email, code, expires_at, created_at) 
+        INSERT INTO doi_mat_khau (email, code, expires_at, created_at) 
         VALUES (?, ?, ?, NOW())
         ON DUPLICATE KEY UPDATE 
         code = VALUES(code), 
@@ -327,7 +327,7 @@ class PasswordController {
 
       // Kiểm tra mã xác minh
       const resetCodes = await connection.query(`
-        SELECT * FROM password_reset_codes 
+        SELECT * FROM doi_mat_khau 
         WHERE email = ? AND code = ? AND expires_at > NOW() AND used = 0
         ORDER BY created_at DESC LIMIT 1
       `, [email, code]);
@@ -382,7 +382,7 @@ class PasswordController {
 
       // Kiểm tra mã xác minh một lần nữa
       const resetCodes = await connection.query(`
-        SELECT * FROM password_reset_codes 
+        SELECT * FROM doi_mat_khau 
         WHERE email = ? AND code = ? AND expires_at > NOW() AND used = 0
         ORDER BY created_at DESC LIMIT 1
       `, [email, code]);
@@ -471,7 +471,7 @@ class PasswordController {
 
       // Đánh dấu mã xác minh đã sử dụng
       await connection.query(
-        'UPDATE password_reset_codes SET used = 1 WHERE email = ? AND code = ?',
+        'UPDATE doi_mat_khau SET used = 1 WHERE email = ? AND code = ?',
         [email, code]
       );
 

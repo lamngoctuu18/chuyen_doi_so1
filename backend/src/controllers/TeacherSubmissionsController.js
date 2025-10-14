@@ -95,7 +95,7 @@ module.exports = {
       if (start > end) return res.status(400).json({ message: 'start_at phải trước end_at' });
 
       // Ensure slot belongs to teacher
-      const [slot] = await db.query(`SELECT id FROM submission_slots WHERE id = ? AND ma_giang_vien = ?`, [Number(slotId), maGiangVien]);
+      const [slot] = await db.query(`SELECT id FROM dot_nop_bao_cao_theo_tuan WHERE id = ? AND ma_giang_vien = ?`, [Number(slotId), maGiangVien]);
       if (!slot) return res.status(404).json({ message: 'Không tìm thấy đợt nộp' });
 
       const r = await TeacherSubmissions.updateSlotTimes(maGiangVien, Number(slotId), { start_at, end_at });
@@ -139,7 +139,7 @@ module.exports = {
       if (!req.file) return res.status(400).json({ message: 'Không có file tải lên' });
 
       // Enforce time window
-      const [slot] = await db.query('SELECT * FROM submission_slots WHERE id = ? LIMIT 1', [Number(slotId)]);
+      const [slot] = await db.query('SELECT * FROM dot_nop_bao_cao_theo_tuan WHERE id = ? LIMIT 1', [Number(slotId)]);
       if (!slot) return res.status(404).json({ message: 'Không tìm thấy đợt nộp' });
       const now = new Date();
       const start = new Date(slot.start_at);
@@ -177,7 +177,7 @@ module.exports = {
       if (!maSinhVien) return res.status(401).json({ message: 'Thiếu thông tin sinh viên' });
       if (files.length === 0) return res.status(400).json({ message: 'Không có file tải lên' });
 
-      const [slot] = await db.query('SELECT * FROM submission_slots WHERE id = ? LIMIT 1', [Number(slotId)]);
+      const [slot] = await db.query('SELECT * FROM dot_nop_bao_cao_theo_tuan WHERE id = ? LIMIT 1', [Number(slotId)]);
       if (!slot) return res.status(404).json({ message: 'Không tìm thấy đợt nộp' });
       const now = new Date();
       const start = new Date(slot.start_at);

@@ -215,6 +215,218 @@ const options = {
           }
         },
 
+        // Student Report Submission schemas
+        StudentReportUpload: {
+          type: 'object',
+          required: ['ma_sinh_vien', 'dot_thuc_tap_id', 'loai_bao_cao', 'report_file'],
+          properties: {
+            ma_sinh_vien: {
+              type: 'string',
+              description: 'Mã sinh viên',
+              example: 'SV001'
+            },
+            dot_thuc_tap_id: {
+              type: 'integer',
+              description: 'ID đợt thực tập',
+              example: 1
+            },
+            loai_bao_cao: {
+              type: 'string',
+              enum: ['tuan', 'thang', 'cuoi_ky', 'tong_ket'],
+              description: 'Loại báo cáo',
+              example: 'tuan'
+            },
+            ghi_chu: {
+              type: 'string',
+              description: 'Ghi chú',
+              example: 'Báo cáo tuần 1'
+            },
+            report_file: {
+              type: 'string',
+              format: 'binary',
+              description: 'File báo cáo (PDF, Word, Excel, PowerPoint - Max 10MB)'
+            }
+          }
+        },
+
+        StudentReport: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            ma_sinh_vien: { type: 'string' },
+            ten_sinh_vien: { type: 'string' },
+            lop: { type: 'string' },
+            dot_thuc_tap_id: { type: 'integer' },
+            ten_dot_thuc_tap: { type: 'string' },
+            ma_giang_vien: { type: 'string' },
+            ten_giang_vien: { type: 'string' },
+            loai_bao_cao: {
+              type: 'string',
+              enum: ['tuan', 'thang', 'cuoi_ky', 'tong_ket']
+            },
+            file_name: { type: 'string' },
+            file_path: { type: 'string' },
+            file_size: { type: 'integer' },
+            mime_type: { type: 'string' },
+            trang_thai_duyet: {
+              type: 'string',
+              enum: ['cho_duyet', 'da_duyet', 'tu_choi'],
+              description: 'Trạng thái duyệt'
+            },
+            nguoi_duyet: { type: 'string' },
+            ngay_duyet: { type: 'string', format: 'date-time' },
+            nhan_xet: { type: 'string' },
+            ly_do_tu_choi: { type: 'string' },
+            ghi_chu: { type: 'string' },
+            ngay_nop: { type: 'string', format: 'date-time' }
+          }
+        },
+
+        ReviewReportRequest: {
+          type: 'object',
+          required: ['nguoi_duyet', 'trang_thai_duyet'],
+          properties: {
+            nguoi_duyet: {
+              type: 'string',
+              description: 'Mã giảng viên duyệt',
+              example: 'GV001'
+            },
+            trang_thai_duyet: {
+              type: 'string',
+              enum: ['da_duyet', 'tu_choi'],
+              description: 'Trạng thái duyệt',
+              example: 'da_duyet'
+            },
+            nhan_xet: {
+              type: 'string',
+              description: 'Nhận xét/Lý do từ chối',
+              example: 'Báo cáo chi tiết, đầy đủ thông tin'
+            }
+          }
+        },
+
+        ReportStatistics: {
+          type: 'object',
+          properties: {
+            tong_so_bao_cao: { type: 'integer' },
+            cho_duyet: { type: 'integer' },
+            da_duyet: { type: 'integer' },
+            tu_choi: { type: 'integer' },
+            thong_ke_theo_loai: {
+              type: 'array',
+              items: {
+                type: 'object',
+                properties: {
+                  loai_bao_cao: { type: 'string' },
+                  so_luong: { type: 'integer' }
+                }
+              }
+            }
+          }
+        },
+
+        // Password Reset schemas
+        PasswordResetRequest: {
+          type: 'object',
+          required: ['email'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              description: 'Email đăng ký tài khoản',
+              example: 'student@dainam.edu.vn'
+            }
+          }
+        },
+
+        PasswordResetResponse: {
+          type: 'object',
+          properties: {
+            success: { type: 'boolean' },
+            message: { type: 'string' },
+            data: {
+              type: 'object',
+              properties: {
+                email: { type: 'string' },
+                expires_in_minutes: { type: 'integer', example: 10 },
+                reset_code: { 
+                  type: 'string', 
+                  description: 'Mã xác thực 6 số (chỉ hiện trong development)',
+                  example: '123456'
+                }
+              }
+            }
+          }
+        },
+
+        VerifyResetCodeRequest: {
+          type: 'object',
+          required: ['email', 'reset_code'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'student@dainam.edu.vn'
+            },
+            reset_code: {
+              type: 'string',
+              pattern: '^[0-9]{6}$',
+              description: 'Mã xác thực 6 số',
+              example: '123456'
+            }
+          }
+        },
+
+        ResetPasswordRequest: {
+          type: 'object',
+          required: ['email', 'reset_code', 'new_password'],
+          properties: {
+            email: {
+              type: 'string',
+              format: 'email',
+              example: 'student@dainam.edu.vn'
+            },
+            reset_code: {
+              type: 'string',
+              pattern: '^[0-9]{6}$',
+              example: '123456'
+            },
+            new_password: {
+              type: 'string',
+              minLength: 6,
+              description: 'Mật khẩu mới (tối thiểu 6 ký tự)',
+              example: 'NewPassword123!'
+            }
+          }
+        },
+
+        PasswordResetHistory: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            email: { type: 'string' },
+            reset_code: { type: 'string' },
+            expiration_time: { type: 'string', format: 'date-time' },
+            used_flag: { type: 'integer', enum: [0, 1] },
+            created_at: { type: 'string', format: 'date-time' },
+            trang_thai: {
+              type: 'string',
+              enum: ['Đã sử dụng', 'Hết hạn', 'Còn hiệu lực']
+            }
+          }
+        },
+
+        RateLimitStatus: {
+          type: 'object',
+          properties: {
+            is_limited: { type: 'boolean' },
+            request_count: { type: 'integer' },
+            max_requests: { type: 'integer' },
+            time_window_minutes: { type: 'integer' },
+            message: { type: 'string' }
+          }
+        },
+
         // Error schemas
         ValidationError: {
           type: 'object',
@@ -299,40 +511,85 @@ const options = {
     tags: [
       {
         name: 'Authentication',
-        description: '🔐 Xác thực và phân quyền'
+        description: '🔐 Xác thực và phân quyền (Login, Logout, Token refresh)'
       },
       {
         name: 'Admin',
-        description: '👨‍💼 Quản lý hệ thống'
+        description: '👨‍💼 Quản lý hệ thống (Admin dashboard, user management)'
       },
       {
         name: 'Sinh Viên',
-        description: '👨‍🎓 Quản lý sinh viên'
+        description: '👨‍🎓 Quản lý sinh viên (Students CRUD, profile, registration)'
       },
       {
         name: 'Giảng Viên',
-        description: '👨‍🏫 Quản lý giảng viên'
+        description: '👨‍🏫 Quản lý giảng viên (Teachers CRUD, assignments, evaluations)'
       },
       {
         name: 'Doanh Nghiệp',
-        description: '🏢 Quản lý doanh nghiệp'
+        description: '🏢 Quản lý doanh nghiệp (Companies CRUD, internship positions)'
       },
       {
-        name: 'Báo Cáo',
-        description: '📊 Báo cáo thực tập'
+        name: 'Đợt Thực Tập',
+        description: '📅 Quản lý đợt thực tập (Internship batches, periods)'
+      },
+      {
+        name: 'Phân Công Thực Tập',
+        description: '📋 Phân công sinh viên - giảng viên (Student-teacher assignments)'
+      },
+      {
+        name: 'Đăng Ký Thực Tập',
+        description: '✍️ Đăng ký thực tập của sinh viên và doanh nghiệp'
+      },
+      {
+        name: 'Báo Cáo Thực Tập',
+        description: '📊 Báo cáo thực tập (Weekly, monthly, final reports)'
+      },
+      {
+        name: 'Báo Cáo Sinh Viên',
+        description: '📝 Báo cáo nộp bởi sinh viên (Student submitted reports)'
+      },
+      {
+        name: 'Nộp Báo Cáo',
+        description: '📤 Upload và quản lý báo cáo (File submissions, approvals)'
+      },
+      {
+        name: 'Đánh Giá Doanh Nghiệp',
+        description: '⭐ Đánh giá doanh nghiệp của giảng viên (Company evaluations)'
+      },
+      {
+        name: 'Đổi Mật Khẩu',
+        description: '🔑 Quản lý đổi mật khẩu (Password reset, forgot password)'
+      },
+      {
+        name: 'Tài Khoản',
+        description: '👤 Quản lý tài khoản (Accounts, profile management)'
       },
       {
         name: 'Import/Export',
-        description: '📁 Import/Export dữ liệu'
+        description: '📁 Import/Export dữ liệu Excel (Bulk operations)'
+      },
+      {
+        name: 'Thông Báo',
+        description: '🔔 Quản lý thông báo (Notifications)'
+      },
+      {
+        name: 'Dashboard',
+        description: '📈 Thống kê và báo cáo tổng hợp (Statistics, analytics)'
+      },
+      {
+        name: 'Files',
+        description: '📎 Quản lý files (File upload, download)'
       },
       {
         name: 'Utilities',
-        description: '🔧 Tiện ích hệ thống'
+        description: '🔧 Tiện ích hệ thống (Health check, system info)'
       }
     ]
   },
   apis: [
     './src/routes/*.js',
+    './src/routes/**/*.js',
     './src/controllers/*.js',
     './server.js'
   ]
