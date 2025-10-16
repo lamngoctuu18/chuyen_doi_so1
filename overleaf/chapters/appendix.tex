@@ -1,0 +1,27 @@
+\appendix
+\chapter{Phụ lục}
+
+\section{Cấu trúc bảng nộp báo cáo (ví dụ)}
+\begin{tabular}{|l|l|l|p{6cm}|}
+\hline
+Cột & Kiểu & Ràng buộc & Mô tả \\
+\hline
+id & SERIAL & PK & ID tự tăng \\
+ma\_sinh\_vien & VARCHAR(20) & FK & Mã sinh viên \\
+loai\_bao\_cao & VARCHAR(20) & NOT NULL & tuan/thang/cuoi\_ky/tong\_ket \\
+file\_path & TEXT & NOT NULL & Đường dẫn tệp \\
+trang\_thai\_duyet & VARCHAR(20) & DEFAULT 'cho\\_duyet' & Trạng thái \\
+created\_at & TIMESTAMP & DEFAULT NOW() & Ngày nộp \\
+\hline
+\end{tabular}
+
+\section{Lệnh triển khai mẫu}
+\begin{lstlisting}[language=bash]
+# Backend env
+DATABASE_URL=postgresql://...
+JWT_SECRET=secret
+PORT=5000
+
+# Frontend env
+VITE_API_URL=http://localhost:5000/api
+\end{lstlisting}

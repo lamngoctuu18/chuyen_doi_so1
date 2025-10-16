@@ -1,0 +1,19 @@
+\chapter{CƠ SỞ LÝ THUYẾT VÀ CÔNG NGHỆ}
+
+\section{Kiến trúc và nguyên lý}
+Hệ thống dựa trên kiến trúc 3 tầng (Client-Server-Database) và RESTful API: stateless, uniform interface, phân tách rõ presentation/business/data.
+
+\section{Frontend}
+Sử dụng React + TypeScript + TailwindCSS. Ưu điểm: component-based, type-safe, hiệu năng tốt, dễ bảo trì.
+
+\section{Backend}
+Node.js + Express. Middleware linh hoạt, routing rõ ràng, phù hợp I/O nhiều. Upload file sử dụng Multer.
+
+\section{Database}
+PostgreSQL: ACID, hỗ trợ JSON, hiệu năng tốt. Có thể triển khai trên Neon.tech để dễ mở rộng.
+
+\section{Bảo mật}
+JWT cho xác thực, bcrypt băm mật khẩu, kiểm tra đầu vào để phòng SQLi/XSS, RBAC cho phân quyền.
+
+\section{Tài liệu API}
+Swagger/OpenAPI giúp chuẩn hóa và thử nghiệm API tương tác.

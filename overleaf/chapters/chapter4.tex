@@ -1,0 +1,24 @@
+\chapter{TRIỂN KHAI HỆ THỐNG}
+
+\section{Cấu trúc dự án}
+\subsection{Backend}
+Thư mục controllers, models, routes, middleware, services; lưu file upload trong \texttt{uploads/}.
+
+\subsection{Frontend}
+React components, pages, hooks, contexts, services (Axios), types, utils.
+
+\section{Các thành phần chính}
+\subsection{Kết nối CSDL}
+Pool PostgreSQL qua biến môi trường \texttt{DATABASE\_URL} (SSL khi production).
+
+\subsection{Xác thực và phân quyền}
+Middleware kiểm tra JWT, RBAC theo vai trò.
+
+\subsection{Nộp báo cáo}
+Upload qua Multer, lưu meta (tên, kích thước, loại), trạng thái mặc định \textit{chờ duyệt}. Giảng viên duyệt/từ chối kèm nhận xét.
+
+\section{Frontend}
+Form nộp báo cáo: chọn loại, upload file, ghi chú; hiển thị tiến trình và thông báo kết quả.
+
+\section{Kiểm thử}
+Unit test model/service; integration test API; kiểm thử thủ công giao diện.

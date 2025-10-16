@@ -136,6 +136,7 @@ const exportToExcel = async (req, res) => {
       { header: 'Số ĐT', key: 'soDienThoai', width: 15 },
       { header: 'Địa chỉ', key: 'diaChiCongTy', width: 40 },
       { header: 'Lĩnh vực', key: 'linhVucHoatDong', width: 25 },
+      { header: 'Vị trí tuyển dụng', key: 'viTriTuyenDung', width: 30 },
       { header: 'Số lượng SV thực tập', key: 'soSinhVienThucTap', width: 20 }
     ];
     
@@ -158,6 +159,7 @@ const exportToExcel = async (req, res) => {
         soDienThoai: company.soDienThoai,
         diaChiCongTy: company.diaChiCongTy,
         linhVucHoatDong: company.linhVucHoatDong,
+        viTriTuyenDung: company.viTriTuyenDung,
         soSinhVienThucTap: company.soSinhVienThucTap || 0
       });
     });

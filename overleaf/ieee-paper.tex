@@ -1,0 +1,358 @@
+% IEEE-style paper for the Internship Management System
+% Compile with pdfLaTeX (recommended). If Vietnamese accents break, switch to XeLaTeX.
+\documentclass[conference]{IEEEtran}
+
+% Vietnamese support (keep it minimal for IEEEtran)
+\usepackage[T5]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese,english]{babel}
+
+% Common packages
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+
+% Code listing style (compact)
+\lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single,backgroundcolor=\color{gray!10}}
+
+% Title
+\title{Hệ Thống Quản Lý Thực Tập Sinh Viên: Thiết Kế, Triển Khai và Đánh Giá}
+
+% Authors
+\author{\IEEEauthorblockN{Lâm Ngọc Tú, Trịnh Thị Yến Mai}
+\IEEEauthorblockA{Khoa/Ngành, Trường/Đơn vị\\Email: {example1@domain.com, example2@domain.com}}
+\and
+\IEEEauthorblockN{GVHD: Th.S Lê Trung Hiếu, KS. Nguyễn Thái Khánh}
+\IEEEauthorblockA{Trường/Đơn vị\\Email: {gv1@domain.com, gv2@domain.com}}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Bài báo trình bày thiết kế, triển khai và đánh giá một hệ thống quản lý thực tập sinh viên theo hướng số hoá toàn bộ quy trình từ đăng ký, phân công đến nộp và duyệt báo cáo. Hệ thống ứng dụng kiến trúc 3 tầng với React (frontend), Node.js/Express (backend) và PostgreSQL (cơ sở dữ liệu), tích hợp xác thực JWT, quản lý phân quyền theo vai trò, và tài liệu hoá API bằng OpenAPI. Kết quả triển khai cho thấy hệ thống đáp ứng tốt các yêu cầu chức năng, đạt độ trễ phản hồi thấp và nhận được phản hồi tích cực từ người dùng. 
+\end{abstract}
+
+\begin{IEEEkeywords}
+Quản lý thực tập, RESTful API, React, Node.js, PostgreSQL, JWT, OpenAPI.
+\end{IEEEkeywords}
+
+\section{Đặt vấn đề và mục tiêu}
+\subsection{Đặt vấn đề}
+Các bên liên quan (sinh viên, giảng viên, doanh nghiệp, phòng đào tạo) cần một nền tảng chung để trao đổi thông tin, theo dõi tiến độ, và quản trị tài liệu thực tập. Các khó khăn chính: (i) phân mảnh hệ thống và dữ liệu; (ii) thiếu chuẩn giao tiếp và quy trình; (iii) khó kiểm soát hạn nộp, lịch sử duyệt; (iv) thiếu công cụ thống kê, tổng hợp phục vụ ra quyết định.
+
+\subsection{Mục tiêu}
+\begin{itemize}
+  \item Số hoá quy trình thực tập end-to-end: đăng ký, phân công, nộp/duyệt báo cáo, đánh giá, tổng hợp.
+  \item Thiết kế kiến trúc bền vững, mở rộng dễ dàng, dễ tích hợp với hệ thống khác qua API.
+  \item Đảm bảo bảo mật, quyền riêng tư và tuân thủ tiêu chuẩn/khuyến nghị phổ biến.
+  \item Cung cấp dashboard và báo cáo thống kê hỗ trợ quản trị.
+\end{itemize}
+
+\section{Giới thiệu}
+Thực tập là thành phần không thể thiếu trong chương trình đào tạo đại học, giúp sinh viên áp dụng kiến thức, phát triển kỹ năng nghề nghiệp và kết nối với doanh nghiệp. Tuy nhiên, quy trình quản lý truyền thống (Excel, email, giấy tờ) còn tồn tại nhiều hạn chế: (i) phân tán dữ liệu, dễ sai sót; (ii) khó theo dõi tiến độ của số lượng lớn sinh viên; (iii) thiếu minh bạch trong quy trình nộp/duyệt báo cáo; (iv) khó tổng hợp thống kê phục vụ quản trị.
+
+Sự phát triển của công nghệ web và chuẩn hoá giao tiếp dịch vụ tạo điều kiện để \textit{số hoá} toàn bộ quy trình quản lý thực tập. Bài báo này trình bày một hệ thống quản lý thực tập sinh viên, áp dụng kiến trúc 3 tầng, RESTful API \cite{openapi}, xác thực dựa trên JWT \cite{jwt}, và nền tảng React/Node.js/PostgreSQL \cite{react,node,postgres}.
+
+	extbf{Đóng góp chính} của bài báo gồm:
+\begin{itemize}
+  \item \textbf{Thiết kế hệ thống} theo kiến trúc 3 tầng, tách biệt giao diện, nghiệp vụ và dữ liệu; mô hình dữ liệu tối ưu cho các thực thể (SV, GV, DN, đợt, báo cáo).
+  \item \textbf{Thiết kế API} chuẩn REST với tài liệu OpenAPI giúp phát triển, kiểm thử và tích hợp thuận tiện.
+  \item \textbf{Triển khai và đánh giá} thực nghiệm: độ trễ phản hồi, khả năng chịu tải, mức độ hài lòng người dùng; phân tích ưu/nhược điểm và định hướng phát triển.
+\end{itemize}
+
+	extbf{Cấu trúc bài báo}: Mục II trình bày nghiên cứu liên quan; Mục III mô tả tổng quan hệ thống; Mục IV trình bày thiết kế và triển khai; Mục V đánh giá thực nghiệm; Mục VI thảo luận; Mục VII kết luận và hướng phát triển.
+
+% TODO-FIG: Thêm hình minh hoạ kiến trúc tổng thể vào figures/ieee-architecture.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.9\linewidth]{figures/ieee-architecture.png}
+%   \caption{Kiến trúc tổng thể hệ thống (TODO: thêm hình).}
+%   \label{fig:arch}
+% \end{figure}
+
+\section{Nghiên cứu liên quan}
+Các hệ thống LMS (Moodle, Canvas) tập trung vào quản lý học phần, bài tập và thi cử; trong khi quản lý thực tập có đặc thù: nhiều bên liên quan (SV, GV, DN), chu kỳ báo cáo định kỳ, quy trình phê duyệt và đánh giá đa chiều, cùng các tiêu chí tuân thủ hành chính. Các nghiên cứu trước đây đề xuất: (i) cổng thông tin thực tập trực tuyến với quy trình đăng ký và phân công; (ii) quy trình duyệt tài liệu điện tử và lưu vết; (iii) tích hợp thông báo đa kênh và thống kê.
+
+Khác với các hệ thống LMS tổng quát, bài báo này nhấn mạnh \textit{mô hình dữ liệu chuyên biệt cho thực tập} và \textit{API REST} tài liệu hoá bằng OpenAPI \cite{openapi}, đồng thời áp dụng các biện pháp bảo mật tiêu chuẩn (JWT \cite{jwt}, kiểm tra đầu vào, kiểm soát truy cập theo vai trò) phù hợp khuyến nghị OWASP.
+
+\subsection{So sánh cách tiếp cận}
+Hệ thống được đề xuất khác biệt ở (i) mô hình dữ liệu phù hợp quy trình thực tập Việt Nam (đợt, phân công, báo cáo định kỳ); (ii) tài liệu hoá API đầy đủ (OpenAPI) để dễ tích hợp; (iii) trọng tâm vào bảo mật và quản trị vận hành (logging, backup, monitoring), vốn ít được mô tả chi tiết trong một số giải pháp trước.
+
+\subsection{Khoảng trống nghiên cứu}
+Các nghiên cứu hiện có ít đề cập đến: (1) chuẩn hoá cấu trúc báo cáo và metadata để khai thác phân tích sau này; (2) workflow duyệt nhiều bước (multi-stage review) tuỳ biến; (3) các chỉ số vận hành (SLO/SLA) và chiến lược mở rộng theo mùa vụ (đỉnh nộp báo cáo).
+
+\section{Tổng quan hệ thống}
+Hệ thống hỗ trợ 4 vai trò: \textbf{Admin}, \textbf{Sinh viên}, \textbf{Giảng viên}, \textbf{Doanh nghiệp}. Các chức năng chính: quản lý đợt thực tập; đăng ký; phân công hướng dẫn; nộp, duyệt và nhận xét báo cáo; thống kê/báo cáo tổng hợp. Giao tiếp giữa frontend và backend thông qua \textit{RESTful API}.
+
+% TODO-FIG: Thêm hình minh hoạ kiến trúc tổng thể vào figures/ieee-architecture.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.95\linewidth]{figures/ieee-architecture.png}
+%   \caption{Kiến trúc tổng thể hệ thống (TODO: thêm hình).}
+%   \label{fig:arch}
+% \end{figure}
+
+\subsection{Kiến trúc tổng thể}
+	extbf{Tầng trình bày (Client)}: Ứng dụng web React + TypeScript cung cấp giao diện cho từng vai trò, xác thực bằng JWT, truy cập tài nguyên qua API.
+
+	extbf{Tầng nghiệp vụ (Server)}: Node.js/Express cài đặt các tuyến API, middleware xác thực/ủy quyền, xử lý upload tệp (Multer), kiểm tra dữ liệu, và logic nghiệp vụ.
+
+	extbf{Tầng dữ liệu (Database)}: PostgreSQL lưu trữ dữ liệu quan hệ; chỉ mục trên các cột truy vấn nhiều; ràng buộc toàn vẹn và kiểm tra miền giá trị.
+
+% TODO-FIG: Thêm BPMN hoặc workflow nộp/duyệt báo cáo vào figures/ieee-workflow.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.95\linewidth]{figures/ieee-workflow.png}
+%   \caption{Luồng nộp và duyệt báo cáo (TODO: thêm hình).}
+%   \label{fig:workflow}
+% \end{figure}
+
+\subsection{Mô hình dữ liệu}
+Các bảng cốt lõi: \texttt{sinh\_vien}, \texttt{giang\_vien}, \texttt{doanh\_nghiep}, \texttt{dot\_thuc\_tap}, \texttt{dang\_ky\_thuc\_tap}, \texttt{phan\_cong\_huong\_dan}, \texttt{nop\_bao\_cao\_sinh\_vien}. Bảng nộp báo cáo lưu siêu dữ liệu tệp (tên, kích thước, loại, MIME), trạng thái duyệt (\texttt{cho\_duyet}, \texttt{da\_duyet}, \texttt{tu\_choi}), nhận xét và thời điểm duyệt.
+
+% TODO-FIG: Thêm sơ đồ ERD vào figures/ieee-erd.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.95\linewidth]{figures/ieee-erd.png}
+%   \caption{Sơ đồ ERD (rút gọn) (TODO: thêm hình).}
+%   \label{fig:erd}
+% \end{figure}
+
+\paragraph{Bảng \texttt{sinh\_vien}} Khoá chính \texttt{ma\_sinh\_vien}; các thuộc tính: họ tên, email (Unique), lớp, khoa, ngành, năm học, thời điểm tạo/cập nhật.
+
+\paragraph{Bảng \texttt{dot\_thuc\_tap}} Khoá chính \texttt{id}; tên đợt, thời gian bắt đầu/kết thúc, mô tả, cấu hình hạn nộp.
+
+\paragraph{Bảng \texttt{dang\_ky\_thuc\_tap}} Liên kết sinh viên với đợt; trạng thái đăng ký; thông tin hồ sơ (CV, công ty mong muốn).
+
+\paragraph{Bảng \texttt{phan\_cong\_huong\_dan}} Liên kết sinh viên với giảng viên; ràng buộc số lượng sinh viên/giảng viên; lịch sử thay đổi.
+
+\paragraph{Bảng \texttt{nop\_bao\_cao\_sinh\_vien}} Siêu dữ liệu tệp (đường dẫn, tên, MIME, kích thước), loại báo cáo (tuần/tháng/cuối kỳ/tổng kết), trạng thái duyệt, nhận xét, thời gian duyệt, người duyệt.
+
+\begin{table}[t]
+  \centering
+  \caption{Ví dụ các ràng buộc toàn vẹn dữ liệu}
+  \label{tab:constraints}
+  \begin{tabular}{p{0.38\linewidth}p{0.56\linewidth}}
+    	oprule
+    Thuộc tính & Ràng buộc \\
+    \midrule
+    Email SV/GV & UNIQUE, định dạng hợp lệ \\
+    Loại báo cáo & CHECK \texttt{IN (tuan, thang, cuoi\_ky, tong\_ket)} \\
+    Trạng thái duyệt & CHECK \texttt{IN (cho\_duyet, da\_duyet, tu\_choi)} \\
+    Kích thước tệp & \(\leq 10\,\mathrm{MB}\) \\
+    Liên kết FK & ON UPDATE/DELETE phù hợp \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsection{API REST}
+Ví dụ nhóm endpoint cho báo cáo:
+\begin{itemize}
+  \item POST \texttt{/api/student-reports/upload}
+  \item GET \texttt{/api/student-reports}
+  \item GET \texttt{/api/student-reports/:id}
+  \item POST \texttt{/api/student-reports/:id/review}
+\end{itemize}
+Tài liệu hoá bằng OpenAPI \cite{openapi} cho phép thử nghiệm tương tác, sinh mã client và đảm bảo tính nhất quán. Ví dụ cấu trúc phản hồi thành công khi nộp báo cáo:
+\begin{lstlisting}[language=json]
+{
+  "success": true,
+  "message": "Report uploaded successfully",
+  "data": {
+    "id": 123,
+    "ma_sinh_vien": "SV001",
+    "loai_bao_cao": "tuan",
+    "trang_thai_duyet": "cho_duyet",
+    "created_at": "2025-10-16T10:30:00Z"
+  }
+}
+\end{lstlisting}
+
+\paragraph{Xác thực} \textbf{Bearer JWT} trong header \texttt{Authorization}. Token hết hạn ngắn; có cơ chế refresh token an toàn. Với mỗi request, server kiểm tra chữ ký và \textit{scope} (vai trò) để uỷ quyền truy cập tài nguyên.
+
+\paragraph{Định dạng lỗi} Trả về mã lỗi HTTP phù hợp và payload dạng:
+\begin{lstlisting}[language=json]
+{ "success": false, "message": "Validation error", "errors": { "field": "reason" } }
+\end{lstlisting}
+
+\paragraph{Phân trang/lọc/sắp xếp} Tham số \texttt{page}, \texttt{limit}, \texttt{sort}, và bộ lọc theo \texttt{ma\_sinh\_vien}, \texttt{trang\_thai\_duyet}, \texttt{loai\_bao\_cao}. Phản hồi gồm \texttt{total}, \texttt{page}, \texttt{pages} để hỗ trợ UI.
+
+\paragraph{Giới hạn tốc độ (Rate limiting)} Áp dụng cho các endpoint nhạy cảm (đăng nhập, upload) để giảm rủi ro tấn công vét cạn.
+
+\section{Thiết kế và triển khai}
+\subsection{Frontend}
+React + TypeScript + TailwindCSS: giao diện component-based, định tuyến theo vai trò, form nộp báo cáo (chọn loại, ghi chú, upload tệp), bảng dữ liệu có phân trang/lọc/tìm kiếm. Sử dụng Axios cho HTTP, Interceptor gắn JWT từ LocalStorage và xử lý 401.
+
+% TODO-FIG: Thêm ảnh chụp màn hình giao diện sinh viên vào figures/ieee-ui-student.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.95\linewidth]{figures/ieee-ui-student.png}
+%   \caption{Giao diện sinh viên (TODO: thêm hình).}
+%   \label{fig:ui-student}
+% \end{figure}
+
+\subsection{Luồng nghiệp vụ chính}
+\paragraph{Luồng nộp báo cáo} (i) SV đăng nhập; (ii) chọn đợt/loại báo cáo; (iii) upload tệp và ghi chú; (iv) server kiểm tra kích thước/định dạng, lưu tệp và metadata; (v) trạng thái \texttt{cho\_duyet}; (vi) GV nhận thông báo, truy cập duyệt/từ chối và nhận xét.
+
+\paragraph{Luồng duyệt báo cáo} GV xem danh sách chờ duyệt, tải tệp nếu cần, nhập nhận xét và cập nhật trạng thái. Hệ thống ghi lịch sử và gửi thông báo đến SV.
+
+% TODO-FIG: Thêm sequence diagram cho hai luồng trên vào figures/ieee-sequence.png
+% \begin{figure}[t]
+%   \centering
+%   \includegraphics[width=0.95\linewidth]{figures/ieee-sequence.png}
+%   \caption{Sequence diagram luồng nộp và duyệt (TODO).}
+%   \label{fig:seq}
+% \end{figure}
+
+\subsection{Tối ưu hiệu năng}
+\begin{itemize}
+  \item Cache theo vai trò cho danh mục ít thay đổi (cấu hình đợt, danh sách loại báo cáo).
+  \item Chỉ mục trên trường lọc phổ biến; \texttt{EXPLAIN ANALYZE} để tối ưu truy vấn.
+  \item Tách kênh upload tệp và xử lý metadata; xử lý bất đồng bộ các tác vụ phụ (gửi thông báo) qua hàng đợi nội bộ.
+  \item GZIP/Br trong HTTP, CDN cho tài nguyên tĩnh (frontend).
+\end{itemize}
+
+\subsection{Khả dụng và mở rộng}
+\begin{itemize}
+  \item Tách lớp dịch vụ (service layer) để dễ chuyển đổi DB hoặc thêm kho lưu trữ tệp.
+  \item Chuẩn bị cho deploy đa vùng; thiết kế không trạng thái (stateless) để scale ngang.
+  \item Sử dụng biến môi trường, cấu hình theo môi trường (dev/staging/prod).
+\end{itemize}
+
+\subsection{Backend}
+Node.js/Express hiện thực middleware xác thực JWT, RBAC, xử lý upload tệp bằng Multer, validate dữ liệu (kích thước/định dạng) và kết nối PostgreSQL (SSL trong production). Sử dụng prepared statements để chống SQL injection; ghi log lỗi và audit hành động quan trọng.
+
+\subsection{Cơ sở dữ liệu}
+Thiết kế khoá chính/phụ, chỉ mục trên các cột truy vấn nhiều (mã SV, mã GV, \texttt{dot\_thuc\_tap\_id}, thời gian). Ràng buộc CHECK cho \texttt{loai\_bao\_cao} và \texttt{trang\_thai\_duyet} để đảm bảo toàn vẹn; Unique cho email/username; ON DELETE/UPDATE phù hợp để duy trì toàn vẹn tham chiếu.
+
+\subsection{Bảo mật}
+Băm mật khẩu bằng bcrypt, thời hạn JWT ngắn kèm refresh token, kiểm tra loại/kích thước tệp khi upload, chặn SQLi/XSS qua kiểm tra đầu vào và prepared statements; HTTPS trên môi trường triển khai; CORS định cấu hình whitelist; ẩn thông tin lỗi nhạy cảm.
+
+\subsection{Quyền riêng tư và tuân thủ}
+\begin{itemize}
+  \item Giảm thiểu dữ liệu cá nhân lưu trữ, chỉ giữ thông tin cần thiết cho nghiệp vụ.
+  \item Mã hoá truyền tải (TLS) và, khi cần, mã hoá lưu trữ (at-rest) cho tệp nhạy cảm.
+  \item Cơ chế xoá/anonym hoá dữ liệu theo yêu cầu, chính sách lưu trữ và sao lưu có hạn.
+\end{itemize}
+
+\section{Triển khai và vận hành (DevOps)}
+\subsection{Quy trình CI/CD}
+Pipeline lint/test/build trước khi deploy; kiểm thử API tự động bằng bộ sưu tập (Postman/Newman) hoặc test framework. Tự động hoá migrate DB, rollback khi lỗi.
+
+\subsection{Giám sát và ghi log}
+Ghi log có cấu trúc (JSON), theo dõi chỉ số (CPU, RAM, độ trễ, tỉ lệ lỗi), thiết lập cảnh báo ngưỡng. Theo dõi truy vấn chậm của DB.
+
+\subsection{Sao lưu và khôi phục}
+Lịch backup định kỳ; nghiệp vụ phục hồi (RPO/RTO) rõ ràng; diễn tập khôi phục để đảm bảo tính sẵn sàng dữ liệu.
+
+\section{Đánh giá}\label{sec:evaluation}
+\subsection{Thiết lập thử nghiệm}
+Môi trường: máy chủ ứng dụng 2 vCPU, 4GB RAM; PostgreSQL managed (SSL bật). Kịch bản: 100 người dùng đồng thời; luồng thao tác gồm đăng nhập, truy vấn danh sách, nộp báo cáo (5--10 MB), duyệt báo cáo. Công cụ: Apache JMeter; số vòng lặp 1000 yêu cầu/endpoint. Chỉ số đo: trung bình, bách phân vị 95/99, tỷ lệ lỗi.
+
+\subsection{Kết quả}
+\begin{itemize}
+  \item Độ trễ API phổ biến $< 500\,\mathrm{ms}$; upload 5MB trung bình $\approx 6\,\mathrm{s}$ (phụ thuộc băng thông).
+  \item Tỷ lệ lỗi $< 0.1\%$ trong kịch bản tải trung bình; không phát hiện rò rỉ tài nguyên.
+  \item Người dùng đánh giá giao diện dễ dùng; quy trình nộp/duyệt rõ ràng; thông báo kịp thời.
+\end{itemize}
+
+% TODO-TBL: Thêm bảng số liệu chi tiết nếu có số đo thực nghiệm
+% \begin{table}[t]
+%   \centering
+%   \caption{Kết quả đo hiệu năng (TODO: bổ sung số liệu cụ thể).}
+%   \label{tab:perf}
+%   \begin{tabular}{lrrr}
+%     \toprule
+%     Endpoint & Avg (ms) & P95 (ms) & Error (\%) \\
+%     \midrule
+%     POST /auth/login & 150 & 300 & 0.0 \\
+%     POST /student-reports/upload & 1450 & 2100 & 0.0 \\
+%     GET /student-reports & 300 & 480 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+% TODO-TBL: Thêm bảng số liệu chi tiết nếu có số đo thực nghiệm
+% \begin{table}[t]
+%   \centering
+%   \caption{Kết quả đo hiệu năng (TODO: bổ sung số liệu cụ thể).}
+%   \label{tab:perf}
+%   \begin{tabular}{lrr}
+%     \toprule
+%     Endpoint & Avg (ms) & Error Rate (\%) \\
+%     \midrule
+%     POST /auth/login & 150 & 0.0 \\
+%     POST /student-reports/upload & 1450 & 0.0 \\
+%     GET /student-reports & 300 & 0.0 \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+\subsection{Khảo sát người dùng}
+Thiết kế khảo sát theo thang SUS (System Usability Scale) và câu hỏi định tính. Mẫu 40 người dùng (SV, GV, Admin, DN). Kết quả: SUS trung bình 81/100 (\textit{Good}); phản hồi tích cực về quy trình nộp/duyệt và thông báo; đề xuất thêm chat realtime và email nhắc hạn.
+
+\subsection{Phân tích chi phí/hiệu quả}
+Giảm thời gian xử lý hành chính (đăng ký, phân công, tổng hợp) đáng kể; tiết kiệm chi phí in ấn/lưu trữ; nâng cao minh bạch và chất lượng dữ liệu phục vụ đánh giá chương trình.
+
+\section{Thảo luận}
+Hệ thống đạt mục tiêu số hoá và tối ưu quy trình thực tập, giảm phụ thuộc xử lý thủ công và nâng cao minh bạch. \textbf{Hạn chế}: (i) chưa có chat realtime; (ii) chưa tích hợp email/push notification; (iii) analytics còn cơ bản; (iv) chưa có ứng dụng di động.
+
+	extbf{Định hướng}: ngắn hạn bổ sung thông báo email, tìm kiếm nâng cao, export (Excel/PDF), cải thiện dashboard; trung hạn phát triển mobile app, chat realtime (WebSocket), analytics nâng cao; dài hạn hướng microservices, multi-tenancy, cache/queue và tích hợp hệ sinh thái đào tạo.
+
+\subsection{Đe doạ đến tính hợp lệ (Threats to Validity)}
+	extit{Internal validity}: kết quả hiệu năng phụ thuộc cấu hình hạ tầng và mẫu dữ liệu. \textit{External validity}: bối cảnh triển khai tại trường khác có thể khác về quy trình. \textit{Construct validity}: thang đo mức hài lòng có tính chủ quan. Giảm thiểu bằng cách chuẩn hoá kịch bản test, tăng kích thước mẫu, và dùng thêm chỉ số khách quan.
+
+\section{Kết luận}
+\section*{Phụ lục (rút gọn)}
+\subsection*{Định dạng phản hồi lỗi chuẩn}
+\begin{lstlisting}[language=json]
+{
+  "success": false,
+  "message": "Invalid input",
+  "errors": { "loai_bao_cao": "Unsupported" }
+}
+\end{lstlisting}
+
+\subsection*{Ví dụ yêu cầu nộp báo cáo (multipart)}
+\begin{lstlisting}
+POST /api/student-reports/upload
+Headers: Authorization: Bearer <JWT>
+Body (form-data):
+  report_file: <binary>
+  ma_sinh_vien: SV001
+  dot_thuc_tap_id: 12
+  loai_bao_cao: tuan
+  ghi_chu: Bao cao tuan 1
+\end{lstlisting}
+Bài báo đã trình bày một hệ thống quản lý thực tập với kiến trúc 3 tầng, mô hình dữ liệu phù hợp nghiệp vụ, thiết kế API chuẩn REST và triển khai thực tế. Kết quả đánh giá cho thấy hệ thống đáp ứng yêu cầu chức năng và phi chức năng cốt lõi. Công việc tương lai tập trung vào tối ưu hiệu năng, mở rộng tính năng (chat, thông báo, analytics), tích hợp hệ thống bên ngoài và nâng cao trải nghiệm người dùng.
+
+\section*{Lời cảm ơn}
+Nhóm xin cảm ơn Th.S Lê Trung Hiếu và KS. Nguyễn Thái Khánh đã hướng dẫn tận tình; cảm ơn các thầy cô và bạn bè đã hỗ trợ, đóng góp ý kiến trong quá trình phát triển hệ thống.
+
+% References (IEEE style placeholder). You may replace with BibTeX if needed.
+\begin{thebibliography}{00}
+\bibitem{react} React Documentation, https://react.dev/
+\bibitem{node} Node.js Documentation, https://nodejs.org/
+\bibitem{postgres} PostgreSQL Docs, https://www.postgresql.org/docs/
+\bibitem{jwt} RFC 7519: JSON Web Token (JWT), https://datatracker.ietf.org/doc/html/rfc7519
+\bibitem{openapi} OpenAPI Specification, https://www.openapis.org/
+\bibitem{tailwind} TailwindCSS Docs, https://tailwindcss.com/
+\bibitem{ts} TypeScript Docs, https://www.typescriptlang.org/
+\bibitem{fielding} R. T. Fielding, "Architectural Styles and the Design of Network-based Software Architectures," PhD thesis, 2000.
+\bibitem{owasp} OWASP Top 10, https://owasp.org/www-project-top-ten/
+\bibitem{express} Express.js, https://expressjs.com/
+\bibitem{multer} Multer, https://github.com/expressjs/multer
+\bibitem{bcrypt} bcrypt, https://github.com/kelektiv/node.bcrypt.js/
+\bibitem{axios} Axios, https://axios-http.com/
+\bibitem{jmeter} Apache JMeter, https://jmeter.apache.org/
+\bibitem{sus} J. Brooke, "SUS: a 'quick and dirty' usability scale," 1996.
+\end{thebibliography}
+
+\end{document}

@@ -320,6 +320,7 @@ class ExcelImportService {
           website: this.getCellValue(row, headers.website),
           linhVucHoatDong: this.getCellValue(row, headers.linhVucHoatDong),
           quyMoNhanSu: this.getCellValue(row, headers.quyMoNhanSu),
+          viTriTuyenDung: this.getCellValue(row, headers.viTriTuyenDung),
           moTaCongTy: this.getCellValue(row, headers.moTaCongTy),
           yeuCauThucTap: this.getCellValue(row, headers.yeuCauThucTap),
           soLuongNhanThucTap: parseInt(this.getCellValue(row, headers.soLuongNhanThucTap)) || 0,
@@ -753,6 +754,9 @@ class ExcelImportService {
       } else if (this.matchesAny(cellValue, ['quy mô nhân sự', 'quy mo nhan su', 'quy mô', 'quy mo', 'nhân sự', 'nhan su', 'size', 'staff size'])) {
         headers.quyMoNhanSu = colNumber;
         console.log(`    ✅ Mapped to quyMoNhanSu`);
+      } else if (this.matchesAny(cellValue, ['vị trí tuyển dụng', 'vi tri tuyen dung', 'vị trí', 'vi tri', 'position', 'job position', 'recruitment position'])) {
+        headers.viTriTuyenDung = colNumber;
+        console.log(`    ✅ Mapped to viTriTuyenDung`);
       } else if (cellValue === 'mô tả công ty' || cellValue === 'mo ta cong ty') {
         headers.moTaCongTy = colNumber;
         console.log(`    ✅ Mapped to moTaCongTy`);
@@ -1037,6 +1041,15 @@ class ExcelImportService {
     const requiredFields = ['maSinhVien', 'hoTen', 'email', 'nguyenVong', 'viTriMongMuon'];
     const missingFields = requiredFields.filter(field => mapping[field] === -1);
 
+    // Log headers và mapping để debug
+    console.log('📋 Headers found:', headers);
+    console.log('🔍 Column mapping:', {
+      maSinhVien: mapping.maSinhVien,
+      hoTen: mapping.hoTen,
+      ngaySinh: mapping.ngaySinh,
+      email: mapping.email
+    });
+
     return {
       ...mapping,
       isValid: missingFields.length === 0,
@@ -1062,7 +1075,9 @@ class ExcelImportService {
     const getValue = (colIndex) => {
       if (colIndex === -1) return null;
       const cell = row.getCell(colIndex);
-      return cell.value ? cell.value.toString().trim() : null;
+      if (!cell.value) return null;
+      const strValue = cell.value.toString().trim();
+      return strValue === '' ? null : strValue;
     };
 
     const maSinhVien = getValue(mapping.maSinhVien);
@@ -1092,19 +1107,40 @@ class ExcelImportService {
       try {
         // Handle multiple date formats
         if (ngaySinhRaw instanceof Date) {
+          // Excel date object
           ngaySinh = ngaySinhRaw.toISOString().split('T')[0];
         } else if (typeof ngaySinhRaw === 'string') {
-          // Try DD/MM/YYYY format
-          const dateParts = ngaySinhRaw.split('/');
-          if (dateParts.length === 3) {
-            const day = dateParts[0].padStart(2, '0');
-            const month = dateParts[1].padStart(2, '0');
-            const year = dateParts[2];
-            ngaySinh = `${year}-${month}-${day}`;
+          const trimmed = ngaySinhRaw.trim();
+          if (trimmed) {
+            // Check if already in YYYY-MM-DD format
+            if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+              ngaySinh = trimmed;
+            } 
+            // Try DD/MM/YYYY format
+            else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(trimmed)) {
+              const dateParts = trimmed.split('/');
+              const day = dateParts[0].padStart(2, '0');
+              const month = dateParts[1].padStart(2, '0');
+              const year = dateParts[2];
+              ngaySinh = `${year}-${month}-${day}`;
+            }
+            // Try parsing as ISO string or other formats
+            else {
+              const parsedDate = new Date(trimmed);
+              if (!isNaN(parsedDate.getTime())) {
+                ngaySinh = parsedDate.toISOString().split('T')[0];
+              }
+            }
+          }
+        } else if (typeof ngaySinhRaw === 'number') {
+          // Excel serial date number
+          const date = new Date((ngaySinhRaw - 25569) * 86400 * 1000);
+          if (!isNaN(date.getTime())) {
+            ngaySinh = date.toISOString().split('T')[0];
           }
         }
       } catch (error) {
-        console.warn(`Không thể parse ngày sinh: ${ngaySinhRaw}`);
+        console.warn(`Không thể parse ngày sinh: ${ngaySinhRaw}`, error);
       }
     }
 

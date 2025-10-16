@@ -17,6 +17,7 @@ class DoanhNghiep {
         this.website = data.website;
         this.linhVucHoatDong = data.linh_vuc_hoat_dong;
         this.quyMoNhanSu = data.quy_mo_nhan_su;
+        this.viTriTuyenDung = data.vi_tri_tuyen_dung;
         this.moTaCongTy = data.mo_ta_cong_ty;
         this.yeuCauThucTap = data.yeu_cau_thuc_tap;
         this.soLuongNhanThucTap = data.so_luong_nhan_thuc_tap;
@@ -41,6 +42,7 @@ class DoanhNghiep {
             website = null,
             linhVucHoatDong = null,
             quyMoNhanSu = null,
+            viTriTuyenDung = null,
             moTaCongTy = null,
             yeuCauThucTap = null,
             soLuongNhanThucTap = 0,
@@ -53,16 +55,16 @@ class DoanhNghiep {
             INSERT INTO doanh_nghiep 
             (account_id, ma_doanh_nghiep, ten_cong_ty, ten_nguoi_lien_he, chuc_vu_nguoi_lien_he,
              dia_chi_cong_ty, so_dien_thoai, email_cong_ty, website, linh_vuc_hoat_dong,
-             quy_mo_nhan_su, mo_ta_cong_ty, yeu_cau_thuc_tap, so_luong_nhan_thuc_tap,
+             quy_mo_nhan_su, vi_tri_tuyen_dung, mo_ta_cong_ty, yeu_cau_thuc_tap, so_luong_nhan_thuc_tap,
              thoi_gian_thuc_tap, dia_chi_thuc_tap, trang_thai_hop_tac) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         try {
             const result = await db.query(query, [
                 accountId, maDoanhNghiep, tenCongTy, tenNguoiLienHe, chucVuNguoiLienHe,
                 diaChiCongTy, soDienThoai, emailCongTy, website, linhVucHoatDong,
-                quyMoNhanSu, moTaCongTy, yeuCauThucTap, soLuongNhanThucTap,
+                quyMoNhanSu, viTriTuyenDung, moTaCongTy, yeuCauThucTap, soLuongNhanThucTap,
                 thoiGianThucTap, diaChiThucTap, trangThaiHopTac
             ]);
 
@@ -157,8 +159,8 @@ class DoanhNghiep {
         const allowedFields = [
             'ten_cong_ty', 'ten_nguoi_lien_he', 'chuc_vu_nguoi_lien_he', 'dia_chi_cong_ty',
             'so_dien_thoai', 'email_cong_ty', 'website', 'linh_vuc_hoat_dong', 'quy_mo_nhan_su',
-            'mo_ta_cong_ty', 'yeu_cau_thuc_tap', 'so_luong_nhan_thuc_tap', 'thoi_gian_thuc_tap',
-            'dia_chi_thuc_tap', 'trang_thai_hop_tac'
+            'vi_tri_tuyen_dung', 'mo_ta_cong_ty', 'yeu_cau_thuc_tap', 'so_luong_nhan_thuc_tap', 
+            'thoi_gian_thuc_tap', 'dia_chi_thuc_tap', 'trang_thai_hop_tac'
         ];
 
         allowedFields.forEach(field => {

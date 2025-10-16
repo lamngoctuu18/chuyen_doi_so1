@@ -1,0 +1,21 @@
+\chapter{PHÂN TÍCH VÀ THIẾT KẾ}
+
+\section{Yêu cầu chức năng}
+\begin{itemize}
+  \item Admin: quản lý tài khoản, đợt thực tập, phân công, thống kê.
+  \item Sinh viên: đăng ký, nộp báo cáo, xem phản hồi.
+  \item Giảng viên: xem sinh viên phụ trách, duyệt/nhận xét báo cáo.
+  \item Doanh nghiệp: đăng ký, cập nhật thông tin, đánh giá sinh viên.
+\end{itemize}
+
+\section{Yêu cầu phi chức năng}
+Hiệu năng (\(<2s\)), bảo mật (JWT, bcrypt), khả năng mở rộng, thân thiện người dùng, tin cậy.
+
+\section{Thiết kế CSDL}
+Các bảng chính: sinh\_vien, giang\_vien, doanh\_nghiep, dot\_thuc\_tap, dang\_ky\_thuc\_tap, phan\_cong\_huong\_dan, nop\_bao\_cao\_sinh\_vien.
+
+\section{Thiết kế API}
+Ví dụ endpoints: \texttt{/api/student-reports/upload}, \texttt{/api/student-reports/:id/review}, \texttt{/api/auth/login}.
+
+\section{Giao diện}
+Thiết kế responsive, các thành phần: form nộp báo cáo, bảng danh sách, modal, thông báo.

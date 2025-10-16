@@ -162,6 +162,7 @@ app.use('/api/doanh-nghiep', require('./src/routes/DoanhNghiep')); // Vietnamese
 app.use('/api/internship-batches', require('./src/routes/internship-batches'));
 app.use('/api/sinh-vien-huong-dan', require('./src/routes/sinhVienHuongDan'));
 app.use('/api/dashboard', require('./src/routes/dashboard'));
+app.use('/api/auto-assignment', require('./src/routes/auto-assignment'));
 
 /**
  * @swagger

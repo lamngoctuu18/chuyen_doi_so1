@@ -551,6 +551,7 @@ router.get('/export/doanh-nghiep', async (req, res) => {
       { header: 'Địa chỉ', key: 'dia_chi_cong_ty', width: 30 },
       { header: 'Lĩnh vực', key: 'linh_vuc_hoat_dong', width: 22 },
       { header: 'Quy mô', key: 'quy_mo_nhan_su', width: 12 },
+      { header: 'Vị trí tuyển dụng', key: 'vi_tri_tuyen_dung', width: 30 },
       { header: 'Website', key: 'website', width: 30 },
       { header: 'Mô tả', key: 'mo_ta_cong_ty', width: 40 }
     ];
@@ -567,6 +568,7 @@ router.get('/export/doanh-nghiep', async (req, res) => {
         dia_chi_cong_ty: dn.diaChiCongTy || dn.dia_chi_cong_ty || '',
         linh_vuc_hoat_dong: dn.linhVucHoatDong || dn.linh_vuc_hoat_dong || '',
         quy_mo_nhan_su: dn.quyMoNhanSu || dn.quy_mo_nhan_su || '',
+        vi_tri_tuyen_dung: dn.viTriTuyenDung || dn.vi_tri_tuyen_dung || '',
         website: dn.website || '',
         mo_ta_cong_ty: dn.moTaCongTy || dn.mo_ta_cong_ty || ''
       });

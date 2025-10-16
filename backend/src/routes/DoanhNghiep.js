@@ -88,6 +88,15 @@ router.get('/stats', authenticateToken, async (req, res) => {
   }
 });
 
+// GET /api/doanh-nghiep/export - Xuất Excel danh sách doanh nghiệp với số lượng sinh viên
+router.get('/export', authenticateToken, DoanhNghiepController.exportToExcel);
+
+// POST /api/doanh-nghiep/sync - Đồng bộ doanh nghiệp từ sinh viên hướng dẫn
+router.post('/sync', authenticateToken, DoanhNghiepController.syncFromSinhVienHuongDan);
+
+// POST /api/doanh-nghiep/import - Import Excel sinh viên thực tập
+router.post('/import', authenticateToken, upload.single('excelFile'), DoanhNghiepController.importFromExcel);
+
 // GET /api/doanh-nghiep/:id - Lấy thông tin doanh nghiệp theo account ID
 router.get('/:id', authenticateToken, async (req, res) => {
   try {
@@ -167,14 +176,5 @@ router.delete('/:id', authenticateToken, async (req, res) => {
     });
   }
 });
-
-// POST /api/doanh-nghiep/sync - Đồng bộ doanh nghiệp từ sinh viên hướng dẫn
-router.post('/sync', authenticateToken, DoanhNghiepController.syncFromSinhVienHuongDan);
-
-// GET /api/doanh-nghiep/export - Xuất Excel danh sách doanh nghiệp với số lượng sinh viên
-router.get('/export', authenticateToken, DoanhNghiepController.exportToExcel);
-
-// POST /api/doanh-nghiep/import - Import Excel sinh viên thực tập
-router.post('/import', authenticateToken, upload.single('excelFile'), DoanhNghiepController.importFromExcel);
 
 module.exports = router;

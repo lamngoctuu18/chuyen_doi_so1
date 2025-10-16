@@ -1,0 +1,99 @@
+% Main LaTeX file for the Internship Management System report
+\documentclass[12pt,a4paper]{report}
+
+% Vietnamese support (works with both pdfLaTeX and (Xe/Lua)LaTeX)
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T5]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[vietnamese]{babel}
+\else
+  \usepackage{fontspec}
+  \usepackage{polyglossia}
+  \setmainlanguage{vietnamese}
+  \setmainfont{Times New Roman}
+\fi
+
+% Common packages
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{multirow}
+
+% Page setup
+\geometry{left=3cm,right=2cm,top=2.5cm,bottom=2.5cm}
+
+% Header/footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\leftmark}
+\fancyfoot[C]{\thepage}
+
+% Listings (code) style
+\lstset{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny,
+  backgroundcolor=\color{gray!10},
+  keywordstyle=\color{blue},
+  commentstyle=\color{green!50!black},
+  stringstyle=\color{red}
+}
+
+% Hyperlinks
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+  urlcolor=cyan,
+  citecolor=blue
+}
+
+% Chapter title formatting
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{-10pt}{30pt}
+
+\begin{document}
+
+% Cover page
+\input{chapters/cover}
+
+% Acknowledgment
+\input{chapters/acknowledgment}
+
+% TOC
+\tableofcontents
+\clearpage
+
+% List of figures/tables (optional – will compile even if empty)
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+
+% Chapters
+\input{chapters/chapter1}
+\input{chapters/chapter2}
+\input{chapters/chapter3}
+\input{chapters/chapter4}
+\input{chapters/chapter5}
+\input{chapters/chapter6}
+
+% References and Appendix
+\input{chapters/references}
+\input{chapters/appendix}
+
+\end{document}

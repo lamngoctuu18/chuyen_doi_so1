@@ -59,7 +59,8 @@ class SinhVien {
         const placeholders = [];
         const values = [];
         for (const [src, dest] of Object.entries(mapping)) {
-            if (data[src] !== undefined && data[src] !== null) {
+            // Skip undefined, null, and empty strings
+            if (data[src] !== undefined && data[src] !== null && data[src] !== '') {
                 cols.push(dest);
                 placeholders.push('?');
                 values.push(data[src]);
@@ -277,10 +278,21 @@ class SinhVien {
         };
         const sets = [];
         const values = [];
+        
+        // Columns that should only check IS NULL (not empty string)
+        // - DATE columns: MySQL DATE cannot be ''
+        // - DECIMAL/NUMERIC columns: MySQL DECIMAL cannot be ''
+        const specialColumns = ['ngay_sinh', 'gpa'];
+        
         for (const [src, dest] of Object.entries(mapping)) {
             const incoming = data[src];
             if (incoming !== undefined && incoming !== null && String(incoming).trim() !== '') {
-                sets.push(`${dest} = IF(${dest} IS NULL OR ${dest} = '', ?, ${dest})`);
+                // For special columns (DATE, DECIMAL), only check IS NULL
+                if (specialColumns.includes(dest)) {
+                    sets.push(`${dest} = IF(${dest} IS NULL, ?, ${dest})`);
+                } else {
+                    sets.push(`${dest} = IF(${dest} IS NULL OR ${dest} = '', ?, ${dest})`);
+                }
                 values.push(incoming);
             }
         }
