@@ -13,62 +13,156 @@
         <img width="200" alt="dnu_logo" src="https://github.com/user-attachments/assets/2bcb1a6c-774c-4e7d-b14d-8c53dbb4067f" />
     </p>
 
-[![AIoTLab](https://img.shields.io/badge/AIoTLab-green?style=for-the-badge)](https://www.facebook.com/DNUAIoTLab)
-[![Faculty of Information Technology](https://img.shields.io/badge/Faculty%20of%20Information%20Technology-blue?style=for-the-badge)](https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin)
-[![DaiNam University](https://img.shields.io/badge/DaiNam%20University-orange?style=for-the-badge)](https://dainam.edu.vn)
+[![React](https://img.shields.io/badge/React-18+-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0+-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+
+[![AIoTLab](https://img.shields.io/badge/AIoTLab-28a745?style=flat-square&logo=facebook)](https://www.facebook.com/DNUAIoTLab)
+[![Faculty of IT](https://img.shields.io/badge/Faculty_of_IT-0066cc?style=flat-square)](https://dainam.edu.vn/vi/khoa-cong-nghe-thong-tin)
+[![DaiNam University](https://img.shields.io/badge/DaiNam_University-ff6b35?style=flat-square)](https://dainam.edu.vn)
 
 </div>
 
-## 1. Giới thiệu hệ thống
+## ✨ Giới thiệu
 
-🎓 **Đề tài:** Hệ thống Quản lý Thực tập Sinh viên
+> **Hệ thống Quản lý Thực tập Sinh viên** - Giải pháp số hóa toàn diện cho quy trình thực tập
 
-Hệ thống quản lý thực tập sinh viên được xây dựng nhằm hỗ trợ toàn bộ quy trình thực tập từ đăng ký, phân công đến đánh giá và báo cáo.  
-Hệ thống kết nối 4 đối tượng chính: Admin, Sinh viên, Giảng viên và Doanh nghiệp thông qua giao diện web hiện đại, đảm bảo quy trình minh bạch và hiệu quả.
+Hệ thống được phát triển để **tối ưu hóa** và **tự động hóa** toàn bộ quy trình thực tập sinh viên, từ đăng ký ban đầu đến đánh giá cuối kỳ. Kết nối liền mạch giữa **4 đối tượng chính**: Admin, Sinh viên, Giảng viên và Doanh nghiệp qua giao diện web hiện đại.
 
-### 🎯 **Mục tiêu hệ thống**
-- Số hóa toàn bộ quy trình quản lý thực tập sinh viên từ đăng ký đến đánh giá.
-- Hỗ trợ phân công tự động sinh viên - giảng viên - doanh nghiệp theo vị trí mong muốn.
-- Quản lý báo cáo thực tập hàng tuần và cuối kỳ với hệ thống chấm điểm.
-- Cung cấp dashboard và thống kê theo thời gian thực cho từng vai trò.
+### 🚀 Tầm nhìn
 
-### 🖥️ **Chức năng Backend (Node.js + Express)**
-- 🗄️ Quản lý dữ liệu sinh viên, giảng viên, doanh nghiệp, đợt thực tập.
-- � RESTful API với Swagger documentation cho tất cả endpoints.
-- 🔒 Xác thực JWT và phân quyền theo vai trò (Admin, SV, GV, DN).
-- � Auto-assignment algorithm: phân công thông minh theo vị trí mong muốn.
-- � Upload và quản lý file báo cáo thực tập với validation.
-- � Import/Export Excel với header mapping thông minh.
-- � Bcrypt password hashing và rate limiting bảo mật.
-- 📧 Hệ thống thông báo và email notification.
-- 💾 Migration scripts và database backup tự động.
+<table>
+<tr>
+<td width="50%">
 
-### 👤 **Chức năng Frontend (React + TypeScript)**
-- 🔑 Đăng nhập/đăng ký với xác thực JWT và quên mật khẩu.
-- � Dashboard riêng biệt cho từng vai trò với thống kê real-time.
-- 👥 Quản lý dữ liệu: CRUD đầy đủ cho sinh viên, giảng viên, doanh nghiệp.
-- � Quản lý đợt thực tập và phân công thông minh.
-- � Hệ thống báo cáo: upload file, chấm điểm, nhận xét.
-- 🎯 Auto-assignment: phân công tự động theo vị trí và khả năng.
-- � Import/Export Excel với template và validation.
-- 🔍 Search, filter và pagination cho tất cả danh sách.
-- 🎨 UI/UX hiện đại với TailwindCSS và Lucide icons.
-- 📱 Responsive design, mobile-friendly.
-- 🌟 Loading states, error handling và user feedback.
+**🎯 Số hóa hoàn toàn**  
+Chuyển đổi quy trình thủ công sang digital workflow
 
-### ⚙️ **Kiến trúc hệ thống**
-- 🏗️ **Backend**: Node.js + Express + MySQL với RESTful API
-- 🎨 **Frontend**: React + TypeScript + Vite + TailwindCSS  
-- �️ **Database**: MySQL với 11 bảng chính và quan hệ chuẩn hóa
-- � **Bảo mật**: JWT authentication, bcrypt hashing, rate limiting
-- 📁 **File Management**: Upload/download báo cáo với validation
-- 📊 **Reports**: ExcelJS cho import/export dữ liệu
-- 🎯 **Auto-Assignment**: Algorithm phân công thông minh
-- 🔄 **Database**: Migration scripts và backup tự động
-- � **Notifications**: Email và in-app notifications
-- 🎪 **Documentation**: Swagger API docs và user guides
+**⚡ Phân công thông minh**  
+Auto-assignment dựa trên AI và preferences
 
-## 2. Công nghệ sử dụng
+</td>
+<td width="50%">
+
+**📊 Báo cáo real-time**  
+Dashboard và analytics cho mọi stakeholder
+
+**🔄 Quy trình minh bạch**  
+Tracking và audit trail đầy đủ
+
+</td>
+</tr>
+</table>
+
+### �️ **Backend Architecture**
+
+<details>
+<summary><b>🖥️ Node.js + Express Server</b></summary>
+
+```
+📡 RESTful API với Swagger documentation
+� JWT Authentication & Role-based Authorization  
+🤖 Auto-assignment Algorithm với AI matching
+📁 File Management với validation & security
+📊 Excel Import/Export với intelligent mapping
+🔒 bcrypt + Rate Limiting + Security headers
+📧 Notification System với email integration
+💾 Database Migration & Backup automation
+```
+
+</details>
+
+### 🎨 **Frontend Experience**
+
+<details>
+<summary><b>⚛️ React + TypeScript SPA</b></summary>
+
+```
+� JWT Authentication với Forgot Password flow
+📊 Role-based Dashboards với real-time analytics
+👥 Full CRUD Operations với optimistic updates
+📅 Smart Assignment System với drag-and-drop
+📝 Rich Report Management với file previews
+🎯 One-click Auto-assignment với progress tracking
+📂 Drag-and-drop Excel Import với live validation
+🔍 Advanced Search/Filter với debounced queries
+🎨 Modern UI với TailwindCSS + Lucide icons
+📱 Mobile-first Responsive Design
+⚡ Loading States + Error Boundaries + Toast notifications
+```
+
+</details>
+
+### 🏗️ **System Architecture**
+
+```mermaid
+graph TB
+    A[� React Frontend] --> B[📡 Express API]
+    B --> C[🗄️ MySQL Database]
+    B --> D[📁 File Storage]
+    B --> E[📧 Email Service]
+    
+    F[👨‍💼 Admin] --> A
+    G[🎓 Student] --> A  
+    H[�‍🏫 Teacher] --> A
+    I[� Company] --> A
+```
+
+<table>
+<tr>
+<td><b>🎨 Frontend Stack</b></td>
+<td><b>🖥️ Backend Stack</b></td>
+<td><b>�️ Database & Tools</b></td>
+</tr>
+<tr>
+<td>
+
+`React 19+`  
+`TypeScript`  
+`Vite`  
+`TailwindCSS`  
+`React Router`
+
+</td>
+<td>
+
+`Node.js 18+`  
+`Express.js`  
+`JWT Auth`  
+`bcrypt`  
+`Multer`
+
+</td>
+<td>
+
+`MySQL 8.0+`  
+`ExcelJS`  
+`Swagger UI`  
+`Rate Limiting`  
+`CORS`
+
+</td>
+</tr>
+</table>
+
+## 🔥 Tech Stack
+
+<div align="center">
+
+### Frontend Powerhouse
+[![React](https://img.shields.io/badge/React-19+-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+
+### Backend Excellence  
+[![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON%20web%20tokens&logoColor=white)](https://jwt.io/)
+
+</div>
 
 ### 🚀 **Frontend**
 - ⚛️ React 19+ với TypeScript
@@ -93,122 +187,262 @@ Hệ thống kết nối 4 đối tượng chính: Admin, Sinh viên, Giảng vi
 - 🗂️ Migration scripts
 - 📋 CORS và rate limiting
 
-## 3. Tính năng chính
+## ✨ Key Features
 
-### 👥 **Phân quyền người dùng**
-- **🔧 Admin**: Quản lý toàn bộ hệ thống, tạo đợt thực tập, import dữ liệu
-- **🎓 Sinh viên**: Đăng ký thực tập, nộp báo cáo hàng tuần, xem kết quả
-- **👨‍🏫 Giảng viên**: Quản lý sinh viên hướng dẫn, chấm điểm, đánh giá
-- **🏢 Doanh nghiệp**: Xem sinh viên được phân công, đánh giá thực tập sinh
+### 🎭 User Roles & Permissions
 
-### 📊 **Dashboard theo vai trò**
-- Thống kê tổng quan với biểu đồ real-time
-- Hoạt động gần đây và thông báo
-- Shortcut nhanh đến các chức năng chính
-- Progress tracking cho từng đối tượng
+<table>
+<tr>
+<th width="25%">�‍💼 Admin</th>
+<th width="25%">🎓 Student</th>
+<th width="25%">👨‍🏫 Teacher</th>
+<th width="25%">🏢 Company</th>
+</tr>
+<tr>
+<td>
 
-### 🎯 **Auto-Assignment System**
-- Phân công tự động sinh viên - giảng viên theo capacity
-- Matching thông minh theo vị trí mong muốn
-- Load balancing để đảm bảo công bằng
-- Import doanh nghiệp với vị trí tuyển dụng
+**System Management**  
+Create internship batches  
+Import bulk data  
+User administration  
+Analytics & reports
 
-### 📝 **Quản lý báo cáo**
-- Upload báo cáo hàng tuần theo lô
-- Chấm điểm và nhận xét từ giảng viên
-- Đánh giá chất lượng từ doanh nghiệp
-- Export báo cáo Excel với thống kê
+</td>
+<td>
 
-## 4. Hướng dẫn cài đặt và sử dụng
+**Registration & Reports**  
+Apply for internships  
+Submit weekly reports  
+View grades & feedback  
+Track progress
 
-### 📋 Yêu cầu hệ thống
+</td>
+<td>
 
-- 💻 Node.js 18+ 
-- 🗃️ MySQL 8.0+
-- 📦 NPM hoặc Yarn
-- 🖥️ Hệ điều hành: Windows/Linux/macOS
+**Student Supervision**  
+Manage assigned students  
+Grade & evaluate  
+Review reports  
+Provide guidance
 
-### 🚀 Cài đặt và khởi động
+</td>
+<td>
 
-#### 1. Clone repository
+**Intern Management**  
+View assigned interns  
+Evaluate performance  
+Provide feedback  
+Post job openings
+
+</td>
+</tr>
+</table>
+
+### 🚀 Smart Features
+
+<div align="center">
+
+| 🤖 **Auto-Assignment** | 📊 **Real-time Dashboard** | 📝 **Report Management** |
+|:---:|:---:|:---:|
+| AI-powered matching | Live analytics | Batch submissions |
+| Load balancing | Role-based views | Automated grading |
+| Position preferences | Progress tracking | File management |
+
+</div>
+
+### 🎯 **Workflow Excellence**
+
+```
+📋 Registration → 🎲 Auto-Assignment → 📅 Internship Period → 📝 Weekly Reports → 📊 Evaluation → 🎓 Completion
+```
+
+## 🚀 Quick Start
+
+### 📋 Prerequisites
+
+<div align="center">
+
+| Tool | Version | Purpose |
+|:---:|:---:|:---:|
+| � Node.js | `18+` | Runtime environment |
+| �️ MySQL | `8.0+` | Database server |
+| 📦 NPM/Yarn | `Latest` | Package manager |
+| � OS | `Win/Linux/macOS` | Development platform |
+
+</div>
+
+### ⚡ Installation
+
+<details>
+<summary><b>🔽 Step-by-step Setup Guide</b></summary>
+
+#### **1️⃣ Clone & Navigate**
 ```bash
-git clone https://github.com/your-username/chuyen_doi_so1.git
+git clone https://github.com/lamngoctuu18/chuyen_doi_so1.git
 cd chuyen_doi_so1
 ```
 
-#### 2. Cấu hình Backend
+#### **2️⃣ Backend Setup**
 ```bash
 cd backend
 npm install
-cp .env.example .env  # Cấu hình database
-npm run setup         # Khởi tạo database và seed data
-npm start            # Chạy server (port 3001)
+cp .env.example .env    # Configure your database
+npm run setup          # Initialize DB & seed data
+npm start              # 🚀 Server running on :3001
 ```
 
-#### 3. Cấu hình Frontend
+#### **3️⃣ Frontend Setup**
 ```bash
-cd quanly-thuctap
+cd ../quanly-thuctap
 npm install
-npm run dev          # Chạy development server (port 5173)
+npm run dev            # 🌐 App running on :5173
 ```
 
-### 🎯 Tài khoản demo
-
-| **Vai trò** | **Email** | **Mật khẩu** | **Mô tả** |
-|-------------|-----------|--------------|-----------|
-| 👨‍💼 Admin | admin@dainam.edu.vn | admin123 | Quản trị viên hệ thống |
-| 🎓 Sinh viên | sv001@dainam.edu.vn | sv123 | Tài khoản sinh viên mẫu |
-| 👨‍🏫 Giảng viên | gv001@dainam.edu.vn | gv123 | Tài khoản giảng viên |
-| 🏢 Doanh nghiệp | dn001@company.com | dn123 | Tài khoản doanh nghiệp |
-
-## 📁 Cấu trúc dự án
-
-```
-chuyen_doi_so1/
-├── backend/                 # Node.js API Server
-│   ├── src/
-│   │   ├── controllers/     # API Controllers
-│   │   ├── models/         # Database Models
-│   │   ├── routes/         # API Routes
-│   │   ├── config/         # Database & App Config
-│   │   └── utils/          # Helper Functions
-│   ├── uploads/            # File Uploads
-│   └── package.json
-├── quanly-thuctap/         # React Frontend
-│   ├── src/
-│   │   ├── components/     # React Components
-│   │   ├── pages/          # Page Components
-│   │   ├── hooks/          # Custom Hooks
-│   │   └── utils/          # Frontend Utilities
-│   └── package.json
-├── docs/                   # Documentation
-└── scripts/                # Setup Scripts
-```
-
-## 📚 Tài liệu
-
-- 📖 [Backend API Documentation](backend/SWAGGER_API_DOCS.md)
-- 🎨 [Frontend Component Guide](quanly-thuctap/README.md)
-- 🔄 [Database Schema](backend/CLEANUP_SUMMARY.md)
-- 🚀 [Deployment Guide](docs/INTEGRATION_GUIDE.md)
-
-## 🌐 Truy cập hệ thống
-
+#### **4️⃣ Access Applications**
 - **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:3001
-- **Swagger Docs**: http://localhost:3001/api-docs
+- **API**: http://localhost:3001  
+- **Swagger**: http://localhost:3001/api-docs
 
-## 🤝 Đóng góp
+</details>
 
-1. Fork repository này
-2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
+### � Demo Accounts
 
-## 📧 Liên hệ
+<table align="center">
+<tr>
+<th>🎯 Role</th>
+<th>📧 Email</th>
+<th>🔑 Password</th>
+<th>📝 Access Level</th>
+</tr>
+<tr>
+<td><b>👨‍💼 Admin</b></td>
+<td><code>admin@dainam.edu.vn</code></td>
+<td><code>admin123</code></td>
+<td>Full system control</td>
+</tr>
+<tr>
+<td><b>🎓 Student</b></td>
+<td><code>sv001@dainam.edu.vn</code></td>
+<td><code>sv123</code></td>
+<td>Registration & reports</td>
+</tr>
+<tr>
+<td><b>👨‍🏫 Teacher</b></td>
+<td><code>gv001@dainam.edu.vn</code></td>
+<td><code>gv123</code></td>
+<td>Student supervision</td>
+</tr>
+<tr>
+<td><b>🏢 Company</b></td>
+<td><code>dn001@company.com</code></td>
+<td><code>dn123</code></td>
+<td>Intern evaluation</td>
+</tr>
+</table>
 
-- **👤 Họ tên:** Lâm Ngọc Tú
-- **🏫 Lớp:** CNTT 16-01
-- **✉️ Email:** lamngoctuk55@gmail.com
-- **🏛️ Trường:** Đại học Đại Nam - Khoa Công nghệ Thông tin
+## � Project Structure
+
+<details>
+<summary><b>🗂️ Explore Codebase Architecture</b></summary>
+
+```
+📦 chuyen_doi_so1/
+├── 🖥️ backend/                 # Node.js API Server
+│   ├── 📁 src/
+│   │   ├── 🎛️ controllers/     # Business Logic & API Handlers
+│   │   ├── 📊 models/         # Database Models & Queries
+│   │   ├── 🛤️ routes/         # Express Route Definitions
+│   │   ├── ⚙️ config/         # Database & Application Config
+│   │   └── 🔧 utils/          # Helper Functions & Utilities
+│   ├── 📁 uploads/            # User File Storage
+│   ├── 📄 package.json        # Dependencies & Scripts
+│   └── 📚 docs/              # API Documentation
+├── 🎨 quanly-thuctap/         # React Frontend SPA
+│   ├── 📁 src/
+│   │   ├── 🧩 components/     # Reusable UI Components
+│   │   ├── 📄 pages/          # Route-based Page Components  
+│   │   ├── 🪝 hooks/          # Custom React Hooks
+│   │   ├── 🔧 utils/          # Frontend Helper Functions
+│   │   └── 🎯 types/          # TypeScript Type Definitions
+│   └── 📄 package.json        # Frontend Dependencies
+├── 📚 docs/                   # Project Documentation
+├── 🛠️ scripts/                # Setup & Deployment Scripts
+└── 📖 README.md               # You are here! 👋
+```
+
+</details>
+
+## 📚 Documentation Hub
+
+<div align="center">
+
+| 📖 Guide | 🎯 Purpose | 🔗 Link |
+|:---:|:---:|:---:|
+| **API Docs** | Backend endpoints & schemas | [📡 Swagger](backend/SWAGGER_API_DOCS.md) |
+| **Frontend Guide** | Component library & patterns | [🎨 Components](quanly-thuctap/README.md) |
+| **Database Schema** | Tables & relationships | [🗄️ Schema](backend/CLEANUP_SUMMARY.md) |
+| **Deployment** | Production setup guide | [🚀 Deploy](docs/INTEGRATION_GUIDE.md) |
+
+</div>
+
+## 🌐 Application URLs
+
+<div align="center">
+
+[![Frontend](https://img.shields.io/badge/Frontend-5173-61DAFB?style=for-the-badge&logo=react)](http://localhost:5173)
+[![API](https://img.shields.io/badge/API-3001-339933?style=for-the-badge&logo=node.js)](http://localhost:3001)
+[![Swagger](https://img.shields.io/badge/Docs-API-85EA2D?style=for-the-badge&logo=swagger)](http://localhost:3001/api-docs)
+
+</div>
+
+## 🤝 Contributing
+
+<details>
+<summary><b>🚀 How to Contribute</b></summary>
+
+```bash
+# 1️⃣ Fork the repo
+git clone https://github.com/your-username/chuyen_doi_so1.git
+
+# 2️⃣ Create feature branch  
+git checkout -b feature/amazing-feature
+
+# 3️⃣ Make your changes
+git add .
+git commit -m "✨ Add amazing feature"
+
+# 4️⃣ Push to your fork
+git push origin feature/amazing-feature
+
+# 5️⃣ Open Pull Request
+# Visit GitHub and create PR with detailed description
+```
+
+**🎯 Contribution Guidelines**  
+- Follow existing code style and patterns
+- Add tests for new features  
+- Update documentation as needed
+- Keep commits atomic and descriptive
+
+</details>
+
+---
+
+<div align="center">
+
+## �‍💻 Developer
+
+<img width="100" height="100" src="https://github.com/lamngoctuu18.png" alt="Lâm Ngọc Tú" style="border-radius: 50%;">
+
+**Lâm Ngọc Tú**  
+🎓 CNTT 16-01  
+🏛️ Đại học Đại Nam - Khoa CNTT  
+
+[![Email](https://img.shields.io/badge/Email-lamngoctuk55%40gmail.com-red?style=for-the-badge&logo=gmail&logoColor=white)](mailto:lamngoctuk55@gmail.com)
+[![GitHub](https://img.shields.io/badge/GitHub-lamngoctuu18-black?style=for-the-badge&logo=github&logoColor=white)](https://github.com/lamngoctuu18)
+
+---
+
+<sub>💝 Made with passion for education technology</sub>
+
+</div>
