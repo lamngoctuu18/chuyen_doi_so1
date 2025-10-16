@@ -24,89 +24,78 @@
 
 </div>
 
-## ✨ Giới thiệu
+## ✨ Giới thiệu hệ thống
 
 > **Hệ thống Quản lý Thực tập Sinh viên** - Giải pháp số hóa toàn diện cho quy trình thực tập
 
-Hệ thống được phát triển để **tối ưu hóa** và **tự động hóa** toàn bộ quy trình thực tập sinh viên, từ đăng ký ban đầu đến đánh giá cuối kỳ. Kết nối liền mạch giữa **4 đối tượng chính**: Admin, Sinh viên, Giảng viên và Doanh nghiệp qua giao diện web hiện đại.
+Hệ thống được phát triển để **tối ưu hóa** và **tự động hóa** toàn bộ quy trình thực tập sinh viên, từ đăng ký ban đầu đến đánh giá cuối kỳ. Kết nối liền mạch giữa **4 đối tượng chính**: Quản trị viên, Sinh viên, Giảng viên và Doanh nghiệp qua giao diện web hiện đại.
 
-### 🚀 Tầm nhìn
+### 🚀 Mục tiêu phát triển
 
-<table>
-<tr>
-<td width="50%">
+<div align="center">
 
-**🎯 Số hóa hoàn toàn**  
-Chuyển đổi quy trình thủ công sang digital workflow
+| 🎯 **Số hóa hoàn toàn** | ⚡ **Phân công thông minh** |
+|:---:|:---:|
+| Chuyển đổi quy trình thủ công sang quy trình điện tử | Phân công tự động dựa trên thuật toán và sở thích |
 
-**⚡ Phân công thông minh**  
-Auto-assignment dựa trên AI và preferences
+| 📊 **Báo cáo thời gian thực** | 🔄 **Quy trình minh bạch** |
+|:---:|:---:|
+| Bảng điều khiển và thống kê cho tất cả người dùng | Theo dõi và lưu vết đầy đủ mọi hoạt động |
 
-</td>
-<td width="50%">
+</div>
 
-**📊 Báo cáo real-time**  
-Dashboard và analytics cho mọi stakeholder
-
-**🔄 Quy trình minh bạch**  
-Tracking và audit trail đầy đủ
-
-</td>
-</tr>
-</table>
-
-### �️ **Backend Architecture**
+### 🛠️ **Kiến trúc máy chủ**
 
 <details>
-<summary><b>🖥️ Node.js + Express Server</b></summary>
+<summary><b>🖥️ Máy chủ Node.js + Express</b></summary>
 
 ```
-📡 RESTful API với Swagger documentation
-� JWT Authentication & Role-based Authorization  
-🤖 Auto-assignment Algorithm với AI matching
-📁 File Management với validation & security
-📊 Excel Import/Export với intelligent mapping
-🔒 bcrypt + Rate Limiting + Security headers
-📧 Notification System với email integration
-💾 Database Migration & Backup automation
+📡 RESTful API với tài liệu Swagger
+🔐 Xác thực JWT và phân quyền theo vai trò  
+🤖 Thuật toán phân công tự động với khớp nối thông minh
+📁 Quản lý tệp với xác thực và bảo mật
+📊 Nhập/Xuất Excel với ánh xạ thông minh
+🔒 Mã hóa bcrypt + Giới hạn tốc độ + Tiêu đề bảo mật
+📧 Hệ thống thông báo với tích hợp email
+💾 Di chuyển cơ sở dữ liệu và sao lưu tự động
 ```
 
 </details>
 
-### 🎨 **Frontend Experience**
+### 🎨 **Trải nghiệm giao diện**
 
 <details>
-<summary><b>⚛️ React + TypeScript SPA</b></summary>
+<summary><b>⚛️ Ứng dụng React + TypeScript</b></summary>
 
 ```
-� JWT Authentication với Forgot Password flow
-📊 Role-based Dashboards với real-time analytics
-👥 Full CRUD Operations với optimistic updates
-📅 Smart Assignment System với drag-and-drop
-📝 Rich Report Management với file previews
-🎯 One-click Auto-assignment với progress tracking
-📂 Drag-and-drop Excel Import với live validation
-🔍 Advanced Search/Filter với debounced queries
-🎨 Modern UI với TailwindCSS + Lucide icons
-📱 Mobile-first Responsive Design
-⚡ Loading States + Error Boundaries + Toast notifications
+🔐 Xác thực JWT với luồng quên mật khẩu
+📊 Bảng điều khiển theo vai trò với phân tích thời gian thực
+👥 Thao tác CRUD đầy đủ với cập nhật tối ưu
+📅 Hệ thống phân công thông minh với kéo thả
+📝 Quản lý báo cáo phong phú với xem trước tệp
+🎯 Phân công tự động một cú nhấp với theo dõi tiến trình
+📂 Nhập Excel kéo thả với xác thực trực tiếp
+🔍 Tìm kiếm/Lọc nâng cao với truy vấn tối ưu
+🎨 Giao diện hiện đại với TailwindCSS + biểu tượng Lucide
+📱 Thiết kế đáp ứng ưu tiên di động
+⚡ Trạng thái tải + Xử lý lỗi + Thông báo nổi
 ```
 
 </details>
 
-### 🏗️ **System Architecture**
+### 🏗️ **Kiến trúc hệ thống**
 
 ```mermaid
 graph TB
-    A[� React Frontend] --> B[📡 Express API]
-    B --> C[🗄️ MySQL Database]
-    B --> D[📁 File Storage]
-    B --> E[📧 Email Service]
+    A[🌐 Giao diện React] --> B[📡 API Express]
+    B --> C[🗄️ Cơ sở dữ liệu MySQL]
+    B --> D[📁 Lưu trữ tệp]
+    B --> E[📧 Dịch vụ Email]
     
-    F[👨‍💼 Admin] --> A
-    G[🎓 Student] --> A  
-    H[�‍🏫 Teacher] --> A
-    I[� Company] --> A
+    F[👨‍💼 Quản trị viên] --> A
+    G[🎓 Sinh viên] --> A  
+    H[👨‍🏫 Giảng viên] --> A
+    I[🏢 Doanh nghiệp] --> A
 ```
 
 <table>
@@ -146,17 +135,17 @@ graph TB
 </tr>
 </table>
 
-## 🔥 Tech Stack
+## � Công nghệ sử dụng
 
 <div align="center">
 
-### Frontend Powerhouse
+### 🎨 Công nghệ giao diện người dùng
 [![React](https://img.shields.io/badge/React-19+-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Vite](https://img.shields.io/badge/Vite-B73BFE?style=for-the-badge&logo=vite&logoColor=FFD62E)](https://vitejs.dev/)
-[![TailwindCSS](https://img.shields.io/badge/Tailwind-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![TailwindCSS](https://img.shields.io/badge/TailwindCSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 
-### Backend Excellence  
+### 🖥️ Công nghệ máy chủ  
 [![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
 [![Express.js](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
@@ -187,7 +176,7 @@ graph TB
 - 🗂️ Migration scripts
 - 📋 CORS và rate limiting
 
-## ✨ Key Features
+## ✨ Tính năng nổi bật
 
 ### 🎭 User Roles & Permissions
 
@@ -238,70 +227,70 @@ Post job openings
 </tr>
 </table>
 
-### 🚀 Smart Features
+### 🚀 Tính năng thông minh
 
 <div align="center">
 
-| 🤖 **Auto-Assignment** | 📊 **Real-time Dashboard** | 📝 **Report Management** |
+| 🤖 **Phân công tự động** | 📊 **Bảng điều khiển thời gian thực** | 📝 **Quản lý báo cáo** |
 |:---:|:---:|:---:|
-| AI-powered matching | Live analytics | Batch submissions |
-| Load balancing | Role-based views | Automated grading |
-| Position preferences | Progress tracking | File management |
+| Khớp nối dựa trên thuật toán | Phân tích trực tiếp | Nộp theo lô |
+| Cân bằng tải | Giao diện theo vai trò | Chấm điểm tự động |
+| Sở thích vị trí | Theo dõi tiến độ | Quản lý tệp tin |
 
 </div>
 
-### 🎯 **Workflow Excellence**
+### 🎯 **Quy trình làm việc xuất sắc**
 
 ```
-📋 Registration → 🎲 Auto-Assignment → 📅 Internship Period → 📝 Weekly Reports → 📊 Evaluation → 🎓 Completion
+📋 Đăng ký → 🎲 Phân công tự động → 📅 Thời gian thực tập → 📝 Báo cáo hàng tuần → 📊 Đánh giá → 🎓 Hoàn thành
 ```
 
-## 🚀 Quick Start
+## 🚀 Hướng dẫn bắt đầu
 
-### 📋 Prerequisites
+### 📋 Yêu cầu hệ thống
 
 <div align="center">
 
-| Tool | Version | Purpose |
+| Công cụ | Phiên bản | Mục đích |
 |:---:|:---:|:---:|
-| � Node.js | `18+` | Runtime environment |
-| �️ MySQL | `8.0+` | Database server |
-| 📦 NPM/Yarn | `Latest` | Package manager |
-| � OS | `Win/Linux/macOS` | Development platform |
+| 🟢 Node.js | `18+` | Môi trường chạy |
+| 🗄️ MySQL | `8.0+` | Máy chủ cơ sở dữ liệu |
+| 📦 NPM/Yarn | `Mới nhất` | Quản lý gói |
+| 💻 Hệ điều hành | `Win/Linux/macOS` | Nền tảng phát triển |
 
 </div>
 
-### ⚡ Installation
+### ⚡ Cài đặt
 
 <details>
-<summary><b>🔽 Step-by-step Setup Guide</b></summary>
+<summary><b>🔽 Hướng dẫn cài đặt từng bước</b></summary>
 
-#### **1️⃣ Clone & Navigate**
+#### **1️⃣ Sao chép và điều hướng**
 ```bash
 git clone https://github.com/lamngoctuu18/chuyen_doi_so1.git
 cd chuyen_doi_so1
 ```
 
-#### **2️⃣ Backend Setup**
+#### **2️⃣ Cài đặt máy chủ**
 ```bash
 cd backend
 npm install
-cp .env.example .env    # Configure your database
-npm run setup          # Initialize DB & seed data
-npm start              # 🚀 Server running on :3001
+cp .env.example .env    # Cấu hình cơ sở dữ liệu
+npm run setup          # Khởi tạo DB và dữ liệu mẫu
+npm start              # 🚀 Máy chủ chạy trên cổng :3001
 ```
 
-#### **3️⃣ Frontend Setup**
+#### **3️⃣ Cài đặt giao diện**
 ```bash
 cd ../quanly-thuctap
 npm install
-npm run dev            # 🌐 App running on :5173
+npm run dev            # 🌐 Ứng dụng chạy trên cổng :5173
 ```
 
-#### **4️⃣ Access Applications**
-- **Frontend**: http://localhost:5173
+#### **4️⃣ Truy cập ứng dụng**
+- **Giao diện người dùng**: http://localhost:5173
 - **API**: http://localhost:3001  
-- **Swagger**: http://localhost:3001/api-docs
+- **Tài liệu Swagger**: http://localhost:3001/api-docs
 
 </details>
 
@@ -340,89 +329,89 @@ npm run dev            # 🌐 App running on :5173
 </tr>
 </table>
 
-## � Project Structure
+## 📂 Cấu trúc dự án
 
 <details>
-<summary><b>🗂️ Explore Codebase Architecture</b></summary>
+<summary><b>🗂️ Khám phá kiến trúc mã nguồn</b></summary>
 
 ```
 📦 chuyen_doi_so1/
-├── 🖥️ backend/                 # Node.js API Server
+├── 🖥️ backend/                 # Máy chủ API Node.js
 │   ├── 📁 src/
-│   │   ├── 🎛️ controllers/     # Business Logic & API Handlers
-│   │   ├── 📊 models/         # Database Models & Queries
-│   │   ├── 🛤️ routes/         # Express Route Definitions
-│   │   ├── ⚙️ config/         # Database & Application Config
-│   │   └── 🔧 utils/          # Helper Functions & Utilities
-│   ├── 📁 uploads/            # User File Storage
-│   ├── 📄 package.json        # Dependencies & Scripts
-│   └── 📚 docs/              # API Documentation
-├── 🎨 quanly-thuctap/         # React Frontend SPA
+│   │   ├── 🎛️ controllers/     # Logic nghiệp vụ & Xử lý API
+│   │   ├── 📊 models/         # Mô hình cơ sở dữ liệu & Truy vấn
+│   │   ├── 🛤️ routes/         # Định nghĩa tuyến đường Express
+│   │   ├── ⚙️ config/         # Cấu hình cơ sở dữ liệu & Ứng dụng
+│   │   └── 🔧 utils/          # Hàm hỗ trợ & Tiện ích
+│   ├── 📁 uploads/            # Lưu trữ tệp người dùng
+│   ├── 📄 package.json        # Phụ thuộc & Tập lệnh
+│   └── 📚 docs/              # Tài liệu API
+├── 🎨 quanly-thuctap/         # Giao diện React SPA
 │   ├── 📁 src/
-│   │   ├── 🧩 components/     # Reusable UI Components
-│   │   ├── 📄 pages/          # Route-based Page Components  
-│   │   ├── 🪝 hooks/          # Custom React Hooks
-│   │   ├── 🔧 utils/          # Frontend Helper Functions
-│   │   └── 🎯 types/          # TypeScript Type Definitions
-│   └── 📄 package.json        # Frontend Dependencies
-├── 📚 docs/                   # Project Documentation
-├── 🛠️ scripts/                # Setup & Deployment Scripts
-└── 📖 README.md               # You are here! 👋
+│   │   ├── 🧩 components/     # Thành phần UI có thể tái sử dụng
+│   │   ├── 📄 pages/          # Thành phần trang theo tuyến đường  
+│   │   ├── 🪝 hooks/          # Hook React tùy chỉnh
+│   │   ├── 🔧 utils/          # Hàm hỗ trợ giao diện
+│   │   └── 🎯 types/          # Định nghĩa kiểu TypeScript
+│   └── 📄 package.json        # Phụ thuộc giao diện
+├── 📚 docs/                   # Tài liệu dự án
+├── 🛠️ scripts/                # Tập lệnh cài đặt & Triển khai
+└── 📖 README.md               # Bạn đang ở đây! 👋
 ```
 
 </details>
 
-## 📚 Documentation Hub
+## 📚 Trung tâm tài liệu
 
 <div align="center">
 
-| 📖 Guide | 🎯 Purpose | 🔗 Link |
+| 📖 Hướng dẫn | 🎯 Mục đích | 🔗 Liên kết |
 |:---:|:---:|:---:|
-| **API Docs** | Backend endpoints & schemas | [📡 Swagger](backend/SWAGGER_API_DOCS.md) |
-| **Frontend Guide** | Component library & patterns | [🎨 Components](quanly-thuctap/README.md) |
-| **Database Schema** | Tables & relationships | [🗄️ Schema](backend/CLEANUP_SUMMARY.md) |
-| **Deployment** | Production setup guide | [🚀 Deploy](docs/INTEGRATION_GUIDE.md) |
+| **Tài liệu API** | Điểm cuối máy chủ và lược đồ | [📡 Swagger](backend/SWAGGER_API_DOCS.md) |
+| **Hướng dẫn giao diện** | Thư viện thành phần và mẫu | [🎨 Components](quanly-thuctap/README.md) |
+| **Lược đồ cơ sở dữ liệu** | Bảng và mối quan hệ | [🗄️ Schema](backend/CLEANUP_SUMMARY.md) |
+| **Triển khai** | Hướng dẫn cài đặt sản xuất | [🚀 Deploy](docs/INTEGRATION_GUIDE.md) |
 
 </div>
 
-## 🌐 Application URLs
+## 🌐 Địa chỉ ứng dụng
 
 <div align="center">
 
-[![Frontend](https://img.shields.io/badge/Frontend-5173-61DAFB?style=for-the-badge&logo=react)](http://localhost:5173)
+[![Giao diện](https://img.shields.io/badge/Giao_diện-5173-61DAFB?style=for-the-badge&logo=react)](http://localhost:5173)
 [![API](https://img.shields.io/badge/API-3001-339933?style=for-the-badge&logo=node.js)](http://localhost:3001)
-[![Swagger](https://img.shields.io/badge/Docs-API-85EA2D?style=for-the-badge&logo=swagger)](http://localhost:3001/api-docs)
+[![Tài liệu](https://img.shields.io/badge/Tài_liệu-API-85EA2D?style=for-the-badge&logo=swagger)](http://localhost:3001/api-docs)
 
 </div>
 
-## 🤝 Contributing
+## 🤝 Đóng góp
 
 <details>
-<summary><b>🚀 How to Contribute</b></summary>
+<summary><b>🚀 Cách đóng góp</b></summary>
 
 ```bash
-# 1️⃣ Fork the repo
+# 1️⃣ Fork repository
 git clone https://github.com/your-username/chuyen_doi_so1.git
 
-# 2️⃣ Create feature branch  
-git checkout -b feature/amazing-feature
+# 2️⃣ Tạo nhánh tính năng  
+git checkout -b feature/tinh-nang-tuyet-voi
 
-# 3️⃣ Make your changes
+# 3️⃣ Thực hiện thay đổi
 git add .
-git commit -m "✨ Add amazing feature"
+git commit -m "✨ Thêm tính năng tuyệt vời"
 
-# 4️⃣ Push to your fork
-git push origin feature/amazing-feature
+# 4️⃣ Đẩy lên fork của bạn
+git push origin feature/tinh-nang-tuyet-voi
 
-# 5️⃣ Open Pull Request
-# Visit GitHub and create PR with detailed description
+# 5️⃣ Tạo Pull Request
+# Truy cập GitHub và tạo PR với mô tả chi tiết
 ```
 
-**🎯 Contribution Guidelines**  
-- Follow existing code style and patterns
-- Add tests for new features  
-- Update documentation as needed
-- Keep commits atomic and descriptive
+**🎯 Hướng dẫn đóng góp**  
+- Tuân thủ phong cách mã và mẫu hiện có
+- Thêm kiểm thử cho tính năng mới  
+- Cập nhật tài liệu khi cần thiết
+- Giữ commit nguyên tử và mô tả rõ ràng
 
 </details>
 
@@ -430,7 +419,7 @@ git push origin feature/amazing-feature
 
 <div align="center">
 
-## �‍💻 Developer
+## 👨‍💻 Nhà phát triển
 
 <img width="100" height="100" src="https://github.com/lamngoctuu18.png" alt="Lâm Ngọc Tú" style="border-radius: 50%;">
 
@@ -443,6 +432,6 @@ git push origin feature/amazing-feature
 
 ---
 
-<sub>💝 Made with passion for education technology</sub>
+<sub>💝 Được tạo ra với đam mê cho công nghệ giáo dục</sub>
 
 </div>
