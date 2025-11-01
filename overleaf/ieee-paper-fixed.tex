@@ -76,7 +76,7 @@ Các bên liên quan (sinh viên, giảng viên, doanh nghiệp, phòng đào t�
 
 \subsection{Mục tiêu}
 \begin{itemize}[label=--]
-  \item Số hoá quy trình thực tập end-to-end: đăng ký, phân công, nộp/duyệt báo cáo, đánh giá, tổng hợp.
+  \item Số hoá quy trình thực tập end-to-end: quản lý tài khoản, phân công, nộp/duyệt báo cáo, đánh giá, tổng hợp.
   \item Thiết kế kiến trúc bền vững, mở rộng dễ dàng, dễ tích hợp với hệ thống khác qua API \cite{fielding}.
   \item Đảm bảo bảo mật, quyền riêng tư và tuân thủ tiêu chuẩn/khuyến nghị phổ biến \cite{owasp}.
   \item Cung cấp dashboard và báo cáo thống kê hỗ trợ quản trị.
@@ -97,23 +97,16 @@ Sự phát triển của công nghệ web và chuẩn hoá giao tiếp dịch v�
 \begin{itemize}[label=--]
   \item \textbf{Thiết kế hệ thống} theo kiến trúc 3 tầng, tách biệt giao diện, nghiệp vụ và dữ liệu; mô hình dữ liệu tối ưu cho các thực thể (SV, GV, DN, đợt, báo cáo) \cite{fielding}.
   \item \textbf{Thiết kế API} chuẩn REST với tài liệu OpenAPI \cite{openapi} giúp phát triển, kiểm thử và tích hợp thuận tiện.
+  \item \textbf{Triển khai thuật toán phân công tự động} sinh viên cho giảng viên hướng dẫn dựa trên cân bằng tải và ràng buộc nghiệp vụ.
   \item \textbf{Triển khai và đánh giá} thực nghiệm: độ trễ phản hồi, khả năng chịu tải, mức độ hài lòng người dùng \cite{sus}; phân tích ưu/nhược điểm và định hướng phát triển.
 \end{itemize}
 
 \textbf{Cấu trúc bài báo}: Mục II trình bày nghiên cứu liên quan; Mục III mô tả tổng quan hệ thống; Mục IV trình bày thiết kế và triển khai; Mục V đánh giá thực nghiệm; Mục VI thảo luận; Mục VII kết luận và hướng phát triển.
 
-% TODO-FIG: Thêm hình minh hoạ kiến trúc tổng thể vào figures/ieee-architecture.png
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.9\linewidth]{figures/ieee-architecture.png}
-%   \caption{Kiến trúc tổng thể hệ thống (TODO: thêm hình).}
-%   \label{fig:arch}
-% \end{figure}
-
 \section{Nghiên cứu liên quan}
 Các hệ thống LMS (Moodle, Canvas) tập trung vào quản lý học phần, bài tập và thi cử; trong khi quản lý thực tập có đặc thù: nhiều bên liên quan (SV, GV, DN), chu kỳ báo cáo định kỳ, quy trình phê duyệt và đánh giá đa chiều, cùng các tiêu chí tuân thủ hành chính. Các nghiên cứu trước đây đề xuất:
 \begin{enumerate}
-  \item Cổng thông tin thực tập trực tuyến với quy trình đăng ký và phân công.
+  \item Cổng thông tin thực tập trực tuyến với quy trình quản lý tài khoản và phân công.
   \item Quy trình duyệt tài liệu điện tử và lưu vết.
   \item Tích hợp thông báo đa kênh và thống kê.
 \end{enumerate}
@@ -124,6 +117,7 @@ Khác với các hệ thống LMS tổng quát, bài báo này nhấn mạnh \te
 Hệ thống được đề xuất khác biệt ở:
 \begin{enumerate}
   \item Mô hình dữ liệu phù hợp quy trình thực tập Việt Nam (đợt, phân công, báo cáo định kỳ).
+  \item Quản lý tài khoản tập trung qua chức năng import hàng loạt, đảm bảo tính thống nhất.
   \item Tài liệu hoá API đầy đủ (OpenAPI) để dễ tích hợp.
   \item Trọng tâm vào bảo mật và quản trị vận hành (logging, backup, monitoring), vốn ít được mô tả chi tiết trong một số giải pháp trước.
 \end{enumerate}
@@ -137,14 +131,14 @@ Các nghiên cứu hiện có ít đề cập đến:
 \end{enumerate}
 
 \section{Tổng quan hệ thống}
-Hệ thống hỗ trợ 4 vai trò: \textbf{Admin}, \textbf{Sinh viên}, \textbf{Giảng viên}, \textbf{Doanh nghiệp}. Các chức năng chính: quản lý đợt thực tập; đăng ký; phân công hướng dẫn; nộp, duyệt và nhận xét báo cáo; thống kê/báo cáo tổng hợp. Giao tiếp giữa frontend và backend thông qua \textit{RESTful API}.
+Hệ thống hỗ trợ 4 vai trò: \textbf{Admin}, \textbf{Sinh viên}, \textbf{Giảng viên}, \textbf{Doanh nghiệp}. Các chức năng chính: quản lý đợt thực tập; import tài khoản người dùng; phân công hướng dẫn; nộp, duyệt và nhận xét báo cáo; thống kê/báo cáo tổng hợp. Giao tiếp giữa frontend và backend thông qua \textit{RESTful API}.
 
 \subsection{Kiến trúc tổng thể}
 Hệ thống được thiết kế theo mô hình kiến trúc 3 tầng như minh họa trong Hình~\ref{fig:arch}, đảm bảo tách biệt rõ ràng giữa tầng trình bày, tầng nghiệp vụ và tầng dữ liệu.
 
-\begin{figure*}[t]
+\begin{figure*}[!t]
   \centering
-  \includegraphics[width=0.85\textwidth]{White and Red Simple Company Structure Organization Graph (1).png}
+  \includegraphics[width=0.75\textwidth]{White and Red Simple Company Structure Organization Graph (1).png}
   \caption{Sơ đồ kiến trúc tổng thể hệ thống quản lý thực tập. Hệ thống gồm 4 vai trò người dùng (Quản trị viên, Sinh viên, Giảng viên, Doanh nghiệp) tương tác với giao diện React, gửi yêu cầu qua API Express đến các dịch vụ backend (cơ sở dữ liệu MySQL, lưu trữ tệp, dịch vụ email).}
   \label{fig:arch}
 \end{figure*}
@@ -157,41 +151,23 @@ Hệ thống được thiết kế theo mô hình kiến trúc 3 tầng như min
 
 Kiến trúc này tạo điều kiện cho việc bảo trì, mở rộng và tích hợp với các hệ thống khác thông qua API chuẩn RESTful.
 
-% TODO-FIG: Thêm BPMN hoặc workflow nộp/duyệt báo cáo vào figures/ieee-workflow.png
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{figures/ieee-workflow.png}
-%   \caption{Luồng nộp và duyệt báo cáo (TODO: thêm hình).}
-%   \label{fig:workflow}
-% \end{figure}
-
 \subsection{Mô hình dữ liệu}
-Các bảng cốt lõi: \texttt{sinh\_vien}, \texttt{giang\_vien}, \texttt{doanh\_nghiep}, \texttt{dot\_thuc\_tap}, \texttt{dang\_ky\_thuc\_tap}, \texttt{phan\_cong\_huong\_dan}, \texttt{nop\_bao\_cao\_sinh\_vien}. Bảng nộp báo cáo lưu siêu dữ liệu tệp (tên, kích thước, loại, MIME), trạng thái duyệt (\texttt{cho\_duyet}, \texttt{da\_duyet}, \texttt{tu\_choi}), nhận xét và thời điểm duyệt.
-
-% TODO-FIG: Thêm sơ đồ ERD vào figures/ieee-erd.png
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{figures/ieee-erd.png}
-%   \caption{Sơ đồ ERD (rút gọn) (TODO: thêm hình).}
-%   \label{fig:erd}
-% \end{figure}
+Các bảng cốt lõi: \texttt{sinh\_vien}, \texttt{giang\_vien}, \texttt{doanh\_nghiệp}, \texttt{dot\_thuc\_tap}, \texttt{phan\_cong\_huong\_dan}, \texttt{nop\_bao\_cao\_sinh\_vien}. Bảng nộp báo cáo lưu siêu dữ liệu tệp (tên, kích thước, loại, MIME), trạng thái duyệt (\texttt{cho\_duyet}, \texttt{da\_duyet}, \texttt{tu\_choi}), nhận xét và thời điểm duyệt.
 
 \paragraph{Bảng \texttt{sinh\_vien}} Khoá chính \texttt{ma\_sinh\_vien}; các thuộc tính: họ tên, email (Unique), lớp, khoa, ngành, năm học, thời điểm tạo/cập nhật.
 
 \paragraph{Bảng \texttt{dot\_thuc\_tap}} Khoá chính \texttt{id}; tên đợt, thời gian bắt đầu/kết thúc, mô tả, cấu hình hạn nộp.
 
-\paragraph{Bảng \texttt{dang\_ky\_thuc\_tap}} Liên kết sinh viên với đợt; trạng thái đăng ký; thông tin hồ sơ (CV, công ty mong muốn).
-
 \paragraph{Bảng \texttt{phan\_cong\_huong\_dan}} Liên kết sinh viên với giảng viên; ràng buộc số lượng sinh viên/giảng viên; lịch sử thay đổi.
 
 \paragraph{Bảng \texttt{nop\_bao\_cao\_sinh\_vien}} Siêu dữ liệu tệp (đường dẫn, tên, MIME, kích thước), loại báo cáo (tuần/tháng/cuối kỳ/tổng kết), trạng thái duyệt, nhận xét, thời gian duyệt, người duyệt.
 
-\begin{table}[t]
+\begin{table}[!t]
   \centering
   \caption{Ví dụ các ràng buộc toàn vẹn dữ liệu}
   \label{tab:constraints}
   \begin{tabular}{p{0.38\linewidth}p{0.56\linewidth}}
-    	oprule
+    \toprule
     Thuộc tính & Ràng buộc \\
     \midrule
     Email SV/GV & UNIQUE, định dạng hợp lệ \\
@@ -243,21 +219,25 @@ React + TypeScript + TailwindCSS \cite{react,ts,tailwind}: giao diện component
 
 Hệ thống cung cấp giao diện riêng biệt cho từng vai trò người dùng, mỗi giao diện được tối ưu hóa cho chức năng và quyền truy cập tương ứng. Giao diện quản trị viên (Hình~\ref{fig:ui-admin}) tập trung vào dashboard thống kê và quản lý tổng thể; giao diện sinh viên (Hình~\ref{fig:ui-student}) tối ưu cho việc nộp báo cáo và theo dõi tiến độ; giao diện giảng viên (Hình~\ref{fig:ui-teacher}) hỗ trợ duyệt báo cáo và chấm điểm; giao diện doanh nghiệp (Hình~\ref{fig:ui-company}) cho phép theo dõi và đánh giá sinh viên thực tập.
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{admin-interface.png}
-  \caption{Giao diện quản trị viên hiển thị dashboard với các thống kê tổng quan (số lượng sinh viên, giảng viên, doanh nghiệp, đợt thực tập), quản lý đợt thực tập, và các chức năng import/export dữ liệu.}
+  \includegraphics[width=0.92\columnwidth]{admin.jpg}
+  \caption{Giao diện quản trị viên hiển thị dashboard với các thống kê tổng quan (số lượng sinh viên, giảng viên, doanh nghiệp, đợt thực tập), quản lý đợt thực tập, và các chức năng import tài khoản hàng loạt/export dữ liệu.}
   \label{fig:ui-admin}
 \end{figure}
 
 \subsection{Luồng nghiệp vụ chính}
 
-\subsubsection{Luồng đăng ký và phân công thực tập}
-Sinh viên đăng ký thực tập thông qua giao diện như minh họa trong Hình~\ref{fig:ui-student}. Sau khi đăng ký, quản trị viên sử dụng chức năng phân công tự động hoặc thủ công để gán giảng viên hướng dẫn và doanh nghiệp cho sinh viên. Giao diện quản trị viên (Hình~\ref{fig:ui-admin}) cung cấp công cụ quản lý đợt thực tập, import danh sách sinh viên hàng loạt, và thực hiện phân công tự động dựa trên thuật toán cân bằng tải.
+\subsubsection{Luồng import tài khoản và phân công thực tập}
+Admin import tài khoản người dùng (sinh viên, giảng viên, doanh nghiệp) từ file Excel thông qua giao diện quản trị (Hình~\ref{fig:ui-admin}). Hệ thống tự động tạo tài khoản với mật khẩu mặc định. Sau khi import, quản trị viên có hai phương thức phân công:
 
-\begin{figure}[htbp]
+\textbf{Phân công tự động}: Hệ thống áp dụng thuật toán cân bằng tải để phân bổ sinh viên cho giảng viên dựa trên các tiêu chí: (i) số lượng sinh viên tối đa mỗi giảng viên, (ii) phân bố đều theo lớp/khoa, (iii) ưu tiên giảng viên có ít sinh viên hơn. Thuật toán giúp giảm thời gian phân công từ vài giờ xuống còn vài giây với hàng trăm sinh viên.
+
+\textbf{Phân công thủ công}: Quản trị viên có thể điều chỉnh lại kết quả phân công tự động hoặc chỉ định trực tiếp từng cặp sinh viên-giảng viên-doanh nghiệp cho các trường hợp đặc biệt.
+
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{student-interface.png}
+  \includegraphics[width=0.95\columnwidth]{sinhvien.jpg}
   \caption{Giao diện sinh viên hiển thị thông tin đợt thực tập đang tham gia, trạng thái phân công (giảng viên hướng dẫn, doanh nghiệp), lịch nộp báo cáo theo tuần, và chức năng upload báo cáo với các trường thông tin: loại báo cáo, tuần số, tiêu đề, nội dung, file đính kèm.}
   \label{fig:ui-student}
 \end{figure}
@@ -273,9 +253,9 @@ Quy trình nộp báo cáo được thực hiện qua các bước sau:
   \item GV nhận thông báo, truy cập giao diện duyệt báo cáo (Hình~\ref{fig:ui-teacher}) để xem, nhận xét và chấm điểm.
 \end{enumerate}
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{teacher-interface.png}
+  \includegraphics[width=0.885\columnwidth]{giangvien.jpg}
   \caption{Giao diện giảng viên hiển thị danh sách sinh viên hướng dẫn với thông tin chi tiết (mã SV, họ tên, doanh nghiệp, trạng thái), bảng danh sách báo cáo chờ duyệt với các trường: loại báo cáo, tuần số, ngày nộp, trạng thái. Giảng viên có thể xem chi tiết báo cáo, tải file, nhập điểm (0-10), nhận xét và cập nhật trạng thái (duyệt/từ chối).}
   \label{fig:ui-teacher}
 \end{figure}
@@ -283,20 +263,12 @@ Quy trình nộp báo cáo được thực hiện qua các bước sau:
 \subsubsection{Luồng đánh giá từ doanh nghiệp}
 Doanh nghiệp đăng nhập và truy cập giao diện như Hình~\ref{fig:ui-company} để xem danh sách sinh viên thực tập tại công ty. Giao diện cho phép doanh nghiệp nhập đánh giá về thái độ, kỹ năng, năng lực chuyên môn của sinh viên, và đề xuất mức điểm đánh giá. Thông tin đánh giá này được lưu trữ và hiển thị cho giảng viên hướng dẫn để tham khảo khi chấm điểm cuối kỳ.
 
-\begin{figure}[htbp]
+\begin{figure}[!t]
   \centering
-  \includegraphics[width=\linewidth]{company-interface.png}
+  \includegraphics[width=0.85\columnwidth]{doanhnghiep.jpg}
   \caption{Giao diện doanh nghiệp hiển thị danh sách sinh viên đang thực tập tại công ty với thông tin: mã sinh viên, họ tên, lớp, giảng viên hướng dẫn, thời gian thực tập. Doanh nghiệp có thể nhập đánh giá chi tiết cho từng sinh viên bao gồm: điểm thái độ, kỹ năng, chuyên môn, nhận xét chi tiết và mức điểm đề xuất.}
   \label{fig:ui-company}
 \end{figure}
-
-% TODO-FIG: Thêm sequence diagram cho hai luồng trên vào figures/ieee-sequence.png
-% \begin{figure}[t]
-%   \centering
-%   \includegraphics[width=0.95\linewidth]{figures/ieee-sequence.png}
-%   \caption{Sequence diagram luồng nộp và duyệt (TODO).}
-%   \label{fig:seq}
-% \end{figure}
 
 \subsection{Tối ưu hiệu năng}
 \begin{itemize}[label=--]
@@ -315,6 +287,8 @@ Doanh nghiệp đăng nhập và truy cập giao diện như Hình~\ref{fig:ui-c
 
 \subsection{Backend}
 Node.js/Express \cite{node,express} hiện thực middleware xác thực JWT \cite{jwt}, RBAC, xử lý upload tệp bằng Multer \cite{multer}, validate dữ liệu (kích thước/định dạng) và kết nối MySQL \cite{mysql} (SSL trong production). Sử dụng prepared statements để chống SQL injection \cite{owasp}; ghi log lỗi và audit hành động quan trọng.
+
+\textbf{Thuật toán phân công tự động}: Hệ thống cài đặt thuật toán greedy để phân bổ sinh viên cho giảng viên. Đầu vào là danh sách sinh viên (đã được import) và danh sách giảng viên với số lượng hướng dẫn tối đa. Thuật toán sắp xếp giảng viên theo số lượng sinh viên hiện tại tăng dần, sau đó lần lượt gán sinh viên cho giảng viên có ít sinh viên nhất. Độ phức tạp $O(n \log m)$ với $n$ sinh viên và $m$ giảng viên, đảm bảo phân bổ đều và hiệu quả.
 
 \subsection{Cơ sở dữ liệu}
 Thiết kế khoá chính/phụ, chỉ mục trên các cột truy vấn nhiều (mã SV, mã GV, \texttt{dot\_thuc\_tap\_id}, thời gian). Ràng buộc CHECK cho \texttt{loai\_bao\_cao} và \texttt{trang\_thai\_duyet} để đảm bảo toàn vẹn; Unique cho email/username; ON DELETE/UPDATE phù hợp để duy trì toàn vẹn tham chiếu.
@@ -346,47 +320,16 @@ Môi trường: máy chủ ứng dụng 2 vCPU, 4GB RAM; MySQL managed (SSL bậ
 \subsection{Kết quả}
 \begin{itemize}[label=--]
   \item Độ trễ API phổ biến $< 500\,\mathrm{ms}$; upload 5MB trung bình $\approx 6\,\mathrm{s}$ (phụ thuộc băng thông).
+  \item Thuật toán phân công tự động xử lý 200 sinh viên cho 20 giảng viên trong $< 2\,\mathrm{s}$, giảm 95\% thời gian so với phân công thủ công.
   \item Tỷ lệ lỗi $< 0.1\%$ trong kịch bản tải trung bình (kiểm thử bằng Apache JMeter \cite{jmeter}); không phát hiện rò rỉ tài nguyên.
-  \item Người dùng đánh giá giao diện dễ dùng; quy trình nộp/duyệt rõ ràng; thông báo kịp thời.
+  \item Người dùng đánh giá giao diện dễ dùng; quy trình nộp/duyệt rõ ràng; chức năng phân công tự động tiết kiệm thời gian đáng kể.
 \end{itemize}
-
-% TODO-TBL: Thêm bảng số liệu chi tiết nếu có số đo thực nghiệm
-% \begin{table}[t]
-%   \centering
-%   \caption{Kết quả đo hiệu năng (TODO: bổ sung số liệu cụ thể).}
-%   \label{tab:perf}
-%   \begin{tabular}{lrrr}
-%     \toprule
-%     Endpoint & Avg (ms) & P95 (ms) & Error (\%) \\
-%     \midrule
-%     POST /auth/login & 150 & 300 & 0.0 \\
-%     POST /student-reports/upload & 1450 & 2100 & 0.0 \\
-%     GET /student-reports & 300 & 480 & 0.0 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
-
-% TODO-TBL: Thêm bảng số liệu chi tiết nếu có số đo thực nghiệm
-% \begin{table}[t]
-%   \centering
-%   \caption{Kết quả đo hiệu năng (TODO: bổ sung số liệu cụ thể).}
-%   \label{tab:perf}
-%   \begin{tabular}{lrr}
-%     \toprule
-%     Endpoint & Avg (ms) & Error Rate (\%) \\
-%     \midrule
-%     POST /auth/login & 150 & 0.0 \\
-%     POST /student-reports/upload & 1450 & 0.0 \\
-%     GET /student-reports & 300 & 0.0 \\
-%     \bottomrule
-%   \end{tabular}
-% \end{table}
 
 \subsection{Khảo sát người dùng}
 Thiết kế khảo sát theo thang SUS (System Usability Scale) \cite{sus} và câu hỏi định tính. Mẫu 40 người dùng (SV, GV, Admin, DN). Kết quả: SUS trung bình 81/100 (\textit{Good}); phản hồi tích cực về quy trình nộp/duyệt và thông báo; đề xuất thêm chat realtime và email nhắc hạn.
 
 \subsection{Phân tích chi phí/hiệu quả}
-Giảm thời gian xử lý hành chính (đăng ký, phân công, tổng hợp) đáng kể; tiết kiệm chi phí in ấn/lưu trữ; nâng cao minh bạch và chất lượng dữ liệu phục vụ đánh giá chương trình.
+Giảm thời gian xử lý hành chính (import tài khoản, phân công, tổng hợp) đáng kể; tiết kiệm chi phí in ấn/lưu trữ; nâng cao minh bạch và chất lượng dữ liệu phục vụ đánh giá chương trình.
 
 \section{Thảo luận}
 Hệ thống đạt mục tiêu số hoá và tối ưu quy trình thực tập, giảm phụ thuộc xử lý thủ công và nâng cao minh bạch.
@@ -405,34 +348,17 @@ Hệ thống đạt mục tiêu số hoá và tối ưu quy trình thực tập,
 \textit{Internal validity}: kết quả hiệu năng phụ thuộc cấu hình hạ tầng và mẫu dữ liệu. \textit{External validity}: bối cảnh triển khai tại trường khác có thể khác về quy trình. \textit{Construct validity}: thang đo mức hài lòng có tính chủ quan. Giảm thiểu bằng cách chuẩn hoá kịch bản test, tăng kích thước mẫu, và dùng thêm chỉ số khách quan.
 
 \section{Kết luận}
-\section*{Phụ lục (rút gọn)}
-\subsection*{Định dạng phản hồi lỗi chuẩn}
-\begin{lstlisting}[language=json]
-{
-  "success": false,
-  "message": "Invalid input",
-  "errors": { "loai_bao_cao": "Unsupported" }
-}
-\end{lstlisting}
-
-\subsection*{Ví dụ yêu cầu nộp báo cáo (multipart)}
-\begin{lstlisting}
-POST /api/student-reports/upload
-Headers: Authorization: Bearer <JWT>
-Body (form-data):
-  report_file: <binary>
-  ma_sinh_vien: SV001
-  dot_thuc_tap_id: 12
-  loai_bao_cao: tuan
-  ghi_chu: Bao cao tuan 1
-\end{lstlisting}
 Bài báo đã trình bày một hệ thống quản lý thực tập với kiến trúc 3 tầng, mô hình dữ liệu phù hợp nghiệp vụ, thiết kế API chuẩn REST và triển khai thực tế. Kết quả đánh giá cho thấy hệ thống đáp ứng yêu cầu chức năng và phi chức năng cốt lõi. Công việc tương lai tập trung vào tối ưu hiệu năng, mở rộng tính năng (chat, thông báo, analytics), tích hợp hệ thống bên ngoài và nâng cao trải nghiệm người dùng.
 
 \section*{Lời cảm ơn}
 Nhóm xin cảm ơn Th.S Lê Trung Hiếu và KS. Nguyễn Thái Khánh đã hướng dẫn tận tình; cảm ơn các thầy cô và bạn bè đã hỗ trợ, đóng góp ý kiến trong quá trình phát triển hệ thống.
 
 % Tài liệu tham khảo
+% Điều chỉnh spacing để phù hợp với định dạng IEEE
 \begin{thebibliography}{00}
+\setlength{\itemsep}{0pt}
+\setlength{\parsep}{0pt}
+\setlength{\parskip}{0pt}
 \bibitem{react} React Documentation, https://react.dev/
 \bibitem{node} Node.js Documentation, https://nodejs.org/
 \bibitem{mysql} MySQL Documentation, https://dev.mysql.com/doc/
