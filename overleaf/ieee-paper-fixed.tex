@@ -19,6 +19,7 @@
 \usepackage{caption}
 \usepackage{subcaption}
 \usepackage{enumitem} % For custom list formatting
+\usepackage{placeins} % For \FloatBarrier to control figure placement
 
 % Code listing style (compact)
 \lstset{basicstyle=\ttfamily\footnotesize,breaklines=true,frame=single,backgroundcolor=\color{gray!10}}
@@ -219,13 +220,14 @@ React + TypeScript + TailwindCSS \cite{react,ts,tailwind}: giao diện component
 
 Hệ thống cung cấp giao diện riêng biệt cho từng vai trò người dùng, mỗi giao diện được tối ưu hóa cho chức năng và quyền truy cập tương ứng. Giao diện quản trị viên (Hình~\ref{fig:ui-admin}) tập trung vào dashboard thống kê và quản lý tổng thể; giao diện sinh viên (Hình~\ref{fig:ui-student}) tối ưu cho việc nộp báo cáo và theo dõi tiến độ; giao diện giảng viên (Hình~\ref{fig:ui-teacher}) hỗ trợ duyệt báo cáo và chấm điểm; giao diện doanh nghiệp (Hình~\ref{fig:ui-company}) cho phép theo dõi và đánh giá sinh viên thực tập.
 
-\begin{figure}[!t]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.92\columnwidth]{admin.jpg}
   \caption{Giao diện quản trị viên hiển thị dashboard với các thống kê tổng quan (số lượng sinh viên, giảng viên, doanh nghiệp, đợt thực tập), quản lý đợt thực tập, và các chức năng import tài khoản hàng loạt/export dữ liệu.}
   \label{fig:ui-admin}
 \end{figure}
 
+\FloatBarrier
 \subsection{Luồng nghiệp vụ chính}
 
 \subsubsection{Luồng import tài khoản và phân công thực tập}
@@ -235,13 +237,14 @@ Admin import tài khoản người dùng (sinh viên, giảng viên, doanh nghi�
 
 \textbf{Phân công thủ công}: Quản trị viên có thể điều chỉnh lại kết quả phân công tự động hoặc chỉ định trực tiếp từng cặp sinh viên-giảng viên-doanh nghiệp cho các trường hợp đặc biệt.
 
-\begin{figure}[!t]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.95\columnwidth]{sinhvien.jpg}
   \caption{Giao diện sinh viên hiển thị thông tin đợt thực tập đang tham gia, trạng thái phân công (giảng viên hướng dẫn, doanh nghiệp), lịch nộp báo cáo theo tuần, và chức năng upload báo cáo với các trường thông tin: loại báo cáo, tuần số, tiêu đề, nội dung, file đính kèm.}
   \label{fig:ui-student}
 \end{figure}
 
+\FloatBarrier
 \subsubsection{Luồng nộp và duyệt báo cáo}
 Quy trình nộp báo cáo được thực hiện qua các bước sau:
 \begin{enumerate}
@@ -253,23 +256,25 @@ Quy trình nộp báo cáo được thực hiện qua các bước sau:
   \item GV nhận thông báo, truy cập giao diện duyệt báo cáo (Hình~\ref{fig:ui-teacher}) để xem, nhận xét và chấm điểm.
 \end{enumerate}
 
-\begin{figure}[!t]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.885\columnwidth]{giangvien.jpg}
   \caption{Giao diện giảng viên hiển thị danh sách sinh viên hướng dẫn với thông tin chi tiết (mã SV, họ tên, doanh nghiệp, trạng thái), bảng danh sách báo cáo chờ duyệt với các trường: loại báo cáo, tuần số, ngày nộp, trạng thái. Giảng viên có thể xem chi tiết báo cáo, tải file, nhập điểm (0-10), nhận xét và cập nhật trạng thái (duyệt/từ chối).}
   \label{fig:ui-teacher}
 \end{figure}
 
+\FloatBarrier
 \subsubsection{Luồng đánh giá từ doanh nghiệp}
 Doanh nghiệp đăng nhập và truy cập giao diện như Hình~\ref{fig:ui-company} để xem danh sách sinh viên thực tập tại công ty. Giao diện cho phép doanh nghiệp nhập đánh giá về thái độ, kỹ năng, năng lực chuyên môn của sinh viên, và đề xuất mức điểm đánh giá. Thông tin đánh giá này được lưu trữ và hiển thị cho giảng viên hướng dẫn để tham khảo khi chấm điểm cuối kỳ.
 
-\begin{figure}[!t]
+\begin{figure}[!ht]
   \centering
   \includegraphics[width=0.85\columnwidth]{doanhnghiep.jpg}
   \caption{Giao diện doanh nghiệp hiển thị danh sách sinh viên đang thực tập tại công ty với thông tin: mã sinh viên, họ tên, lớp, giảng viên hướng dẫn, thời gian thực tập. Doanh nghiệp có thể nhập đánh giá chi tiết cho từng sinh viên bao gồm: điểm thái độ, kỹ năng, chuyên môn, nhận xét chi tiết và mức điểm đề xuất.}
   \label{fig:ui-company}
 \end{figure}
 
+\FloatBarrier
 \subsection{Tối ưu hiệu năng}
 \begin{itemize}[label=--]
   \item Cache theo vai trò cho danh mục ít thay đổi (cấu hình đợt, danh sách loại báo cáo).
