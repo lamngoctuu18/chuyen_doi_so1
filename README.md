@@ -178,50 +178,50 @@ graph TB
 
 ## ✨ Tính năng nổi bật
 
-### 🎭 User Roles & Permissions
+### 🎭 Vai trò người dùng & Quyền hạn
 
 <table>
 <tr>
-<th width="25%">�‍💼 Admin</th>
-<th width="25%">🎓 Student</th>
-<th width="25%">👨‍🏫 Teacher</th>
-<th width="25%">🏢 Company</th>
+<th width="25%">👨‍💼 Quản trị viên</th>
+<th width="25%">🎓 Sinh viên</th>
+<th width="25%">👨‍🏫 Giáo viên</th>
+<th width="25%">🏢 Doanh nghiệp</th>
 </tr>
 <tr>
 <td>
 
-**System Management**  
-Create internship batches  
-Import bulk data  
-User administration  
-Analytics & reports
+**Quản lý hệ thống**  
+Tạo đợt thực tập  
+Nhập dữ liệu hàng loạt  
+Quản trị người dùng  
+Phân tích & báo cáo
 
 </td>
 <td>
 
-**Registration & Reports**  
-Apply for internships  
-Submit weekly reports  
-View grades & feedback  
-Track progress
+**Đăng ký & Báo cáo**  
+Đăng ký thực tập  
+Nộp báo cáo hàng tuần  
+Xem điểm & phản hồi  
+Theo dõi tiến độ
 
 </td>
 <td>
 
-**Student Supervision**  
-Manage assigned students  
-Grade & evaluate  
-Review reports  
-Provide guidance
+**Giám sát sinh viên**  
+Quản lý sinh viên được phân công  
+Chấm điểm & đánh giá  
+Xem xét báo cáo  
+Cung cấp hướng dẫn
 
 </td>
 <td>
 
-**Intern Management**  
-View assigned interns  
-Evaluate performance  
-Provide feedback  
-Post job openings
+**Quản lý thực tập sinh**  
+Xem thực tập sinh được phân công  
+Đánh giá hiệu suất  
+Cung cấp phản hồi  
+Đăng tin tuyển dụng
 
 </td>
 </tr>
